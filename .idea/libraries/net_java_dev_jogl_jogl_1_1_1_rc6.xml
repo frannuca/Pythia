@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="net.java.dev.jogl_jogl_1.1.1-rc6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/net.java.dev.jogl/jogl/jars/jogl-1.1.1-rc6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

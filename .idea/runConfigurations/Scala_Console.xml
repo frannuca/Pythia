@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Scala Console" type="ScalaScriptConsoleRunConfiguration" factoryName="Scala Console">
+    <module name="project" />
+    <setting name="vmparams" value="" />
+    <setting name="consoleArgs" value="" />
+    <setting name="workingDirectory" value="$PROJECT_DIR$" />
+    <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper RunnerId="Run" />
+    <method>
+      <option name="Make" enabled="false" />
+      <option name="SBT.BeforeRunTask" enabled="true" runInCurrentModule="false" />
+    </method>
+  </configuration>
+</component>
