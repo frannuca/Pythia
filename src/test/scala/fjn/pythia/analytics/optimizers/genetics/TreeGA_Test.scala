@@ -1,4 +1,4 @@
-/*
+
 package fjn.pythia.analytics.optimizers.genetics
 
 
@@ -51,10 +51,9 @@ class TreeGA_Test extends Specification {
 
       val resArray = Array (- 9, 9, - 9, 9);
 
-      (talg.storage.getBest (1) (0).chr.getValue ().toList, resArray.toList).zipped.forall ((x, y) => (scala.math.abs (x - y) <= 1e-1) )
+      (talg.storage.getBest (1) (0).chr.getValue ().toList, resArray.toList).zipped.forall ((x, y) => (scala.math.abs (x - y) <= 0.5) )
 
     }
 
   }
 
-*/
