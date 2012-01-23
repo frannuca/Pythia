@@ -1,4 +1,4 @@
-package fjn.pythia.analytics.optimizers.genetics.commons
+package fjn.pythia.analytics.optimizers.genetics.discrete.commons
 
 import populationType._
 
@@ -62,9 +62,9 @@ class Population (popSize:Int,nBits:Array[Int],minLevel:Array[Double],maxLevel:A
 
   }
 
-  def set(index:Int,b:Array[Int])={
+  def setChromosomeI(index:Int,b:Array[Int])={
     if (index<popSize && index>=0){
-             population(index).chr.setValue(b)
+             population(index).chr.setValueBit(b)
               true
         }
         else{
@@ -73,7 +73,7 @@ class Population (popSize:Int,nBits:Array[Int],minLevel:Array[Double],maxLevel:A
 
   }
 
-  def set(index:Int,b:Array[Double])={
+  def setChromosomeD(index:Int,b:Array[Double])={
     if (index<popSize && index>=0){
              population(index).chr.setValue(b)
               true

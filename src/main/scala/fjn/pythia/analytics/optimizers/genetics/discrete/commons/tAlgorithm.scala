@@ -1,9 +1,9 @@
-package fjn.pythia.analytics.optimizers.genetics.commons
+package fjn.pythia.analytics.optimizers.genetics.discrete.commons
 
 import collection.mutable.ListBuffer
 
 
-trait tAlgorithm[T]{
+trait tAlgorithm{
 
   /**
    * Evolution of the tAlgorithm is performed through calls to next

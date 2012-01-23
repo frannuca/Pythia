@@ -1,6 +1,4 @@
-
-package fjn.pythia.analytics.optimizers.genetics
-
+package fjn.pythia.analytics.optimizers.genetics.discrete
 
 import org.specs2.mutable.Specification
 

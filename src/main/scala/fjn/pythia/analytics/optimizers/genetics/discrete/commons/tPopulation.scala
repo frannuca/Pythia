@@ -1,4 +1,4 @@
-package fjn.pythia.analytics.optimizers.genetics.commons
+package fjn.pythia.analytics.optimizers.genetics.discrete.commons
 
 object populationType extends Enumeration {
         type populationType = Value
@@ -10,7 +10,7 @@ import collection.mutable.ListBuffer
 
 
 /**
- * defines the minimum components needed to interact with the set of trials used during
+ * defines the minimum components needed to interact with the setChromosomeI of trials used during
  * an optimization process
  */
 class popPair[T] private (key:T,v:Double){

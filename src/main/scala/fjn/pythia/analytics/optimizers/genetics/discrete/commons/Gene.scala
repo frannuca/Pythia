@@ -1,4 +1,4 @@
-package fjn.pythia.analytics.optimizers.genetics.commons
+package fjn.pythia.analytics.optimizers.genetics.discrete.commons
 
 import scala.math.{pow,ceil}
 import util.Random
@@ -7,12 +7,12 @@ import util.Random
 /**
  * Gene class contains a binary codification of a given Double value
  * A gene specifies a double values with the following features:
- *  @param  minimum  is the lower bound constraint for the internal value
- *  @param maximum is the upper bound constraint for the interanl value
- *  @param numberOfBits: 2^numberOfBits is the number of level in which the range (maximum-minimum) is
+ *  @param  minLevel  is the lower bound constraint for the internal value
+ *  @param maxLevel is the upper bound constraint for the interanl value
+ *  @param nBits: pow(2,numberOfBits) is the number of level in which the range (maximum-minimum) is
  *  discretized to codify the internal value into binary.
  */
-case class  Gene(minLevel:Double,maxLevel:Double,nBits:Int) extends Ordered[Gene] {
+case class  Gene(minLevel:Double,maxLevel:Double,nBits:Int) extends Ordered[Gene] with tParameter {
 
 
   //Constraints on the constructor parameters
@@ -49,6 +49,9 @@ case class  Gene(minLevel:Double,maxLevel:Double,nBits:Int) extends Ordered[Gene
    */
   def :=(d:Seq[Int])={d.copyToArray(binaryCode,0)}
 
+  def setValue(d:Double)={
+    this.:=(d)
+    }
 
   ///Creates a random internal binary code
   def random={

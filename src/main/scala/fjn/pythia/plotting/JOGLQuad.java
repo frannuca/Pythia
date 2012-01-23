@@ -45,7 +45,7 @@
 //
 //        // Draw A Quad
 //        gl.glBegin(GL2.GL_QUADS);
-//            gl.glColor3f(0.0f, 1.0f, 1.0f);   // set the color of the quad
+//            gl.glColor3f(0.0f, 1.0f, 1.0f);   // setChromosomeI the color of the quad
 //            gl.glVertex3f(-1.0f, 1.0f, 0.0f);      // Top Left
 //            gl.glVertex3f( 1.0f, 1.0f, 0.0f);       // Top Right
 //            gl.glVertex3f( 1.0f,-1.0f, 0.0f);      // Bottom Right

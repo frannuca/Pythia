@@ -1,5 +1,4 @@
-package fjn
-package pythia.analytics.optimizers.genetics.commons
+package fjn.pythia.analytics.optimizers.genetics.discrete.commons
 
 import scala.util.Random
 import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing.Validation
@@ -9,12 +8,12 @@ import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing.Validation
  *  Chromosome class wraps an internal array of Genes (see class Gene). This class represents one individual within a
  *  population.
  *
- *  Chromosome class is set up providing the following signature:
+ *  Chromosome class is setChromosomeI up providing the following signature:
  * @param nBits: number of bits to codify each parameter within the chromosome.
- * @param minLevel: lower bound for each parameter
- * @param maxLevel: upper bound for each parameter
+ * @param minLevelArray: lower bound for each parameter
+ * @param maxLevelArray: upper bound for each parameter
  */
-class Chromosome(nBits: Array[Int], minLevel: Array[Double], maxLevel: Array[Double]) extends Ordered[Chromosome] with tParameter {
+case class Chromosome(nBits: Array[Int], minLevelArray: Array[Double],maxLevelArray: Array[Double]) extends Ordered[Chromosome] with tArrayParameter {
 
 
   /////////////////////////////////////////////////////////////
@@ -22,13 +21,13 @@ class Chromosome(nBits: Array[Int], minLevel: Array[Double], maxLevel: Array[Dou
   ////////////////////////////////////////////////////////////////
 
   //is mandatory that all the following arrays have the same lengths
-  require(nBits.size > 0 && nBits.length == minLevel.size && minLevel.size == maxLevel.size);
+  require(nBits.size > 0 && nBits.length == minLevelArray.size && minLevelArray.size == maxLevelArray.size);
 
   //Number of parameters coded into this chromosome
   def size = nBits.size;
 
 
-  val chromosome: Array[Gene] = (for (i <- 0.until(size)) yield Gene(minLevel(i), maxLevel(i), nBits(i))).toArray;
+  val chromosome: Array[Gene] = (for (i <- 0.until(size)) yield Gene(minLevelArray(i), maxLevelArray(i), nBits(i))).toArray;
 
 
   /////////////////////////////////////////////////////////////
@@ -71,7 +70,7 @@ class Chromosome(nBits: Array[Int], minLevel: Array[Double], maxLevel: Array[Dou
    * in the population (think of mutation for example)
    */
   def copy(): Chromosome = {
-    val a = new Chromosome(nBits, minLevel, maxLevel);
+    val a = new Chromosome(nBits, minLevelArray, maxLevelArray);
     a.setValue(this.getValue())
     a
   }
@@ -94,7 +93,7 @@ class Chromosome(nBits: Array[Int], minLevel: Array[Double], maxLevel: Array[Dou
       }
     }
 
-    return 0;
+    0
   }
 
 
@@ -102,7 +101,7 @@ class Chromosome(nBits: Array[Int], minLevel: Array[Double], maxLevel: Array[Dou
   //@param v  must have dimension of  totalNumberOfBits, being the vector resulting from the aggregation
   // of all the Gene.getBits contained in the specified chromosome
   @throws(classOf[IllegalArgumentException])
-  def setValue(v: Array[Int]): Unit = {
+  def setValueBit(v: Array[Int]) = {
 
     if (this.totalNumberOfBits != v.size) {
       throw new IllegalArgumentException("total length for array v does not match this chromosome length")
@@ -192,7 +191,7 @@ class Chromosome(nBits: Array[Int], minLevel: Array[Double], maxLevel: Array[Dou
       case (0) => arr(index) = 1;
       case _ => arr(index) = 0;
     }
-    this.setValue(arr);
+    this.setValueBit(arr);
   }
 
   //returns a chromosome vector with double values for friendly visualization

@@ -1,5 +1,4 @@
-package fjn.pythia.analytics.optimizers.genetics
-
+package fjn.pythia.analytics.optimizers.genetics.discrete
 
 import commons.{popPair, Population, Chromosome, tAlgorithm}
 import math.{log}
@@ -18,7 +17,7 @@ class TreeGA( popSize:Int,
               minLevel:Array[Double],
               maxLevel:Array[Double],
               pFunc:(Array[Double])=>Double,
-              mutationProb:Double) extends tAlgorithm[Chromosome] {
+              mutationProb:Double) extends tAlgorithm {
 
 
 
@@ -75,23 +74,23 @@ class TreeGA( popSize:Int,
     var p_xi_xj:Double = 0.0;
     if (i<j)
     {
-      p_xj=A_Tree(i)(j)(0+val_j)+A_Tree(i)(j)(2+val_j);  //p(xi=0,Xj=xj)+p(xi=1,Xj=xj)  
+      p_xj=A_Tree(i)(j)(0+val_j)+A_Tree(i)(j)(2+val_j);  //p(xi=0,Xj=xj)+p(xi=1,Xj=xj)
       //computing randomVariable of p(xi,xj)
       p_xi_xj=A_Tree(i)(j)(2*val_i+val_j);
     }
     else if (i>j)
     {
-      p_xj=A_Tree(j)(i)(2*val_j)+A_Tree(j)(i)(1+2*val_j);  //p(xi=0,Xj=xj)+p(xi=1,Xj=xj)  
+      p_xj=A_Tree(j)(i)(2*val_j)+A_Tree(j)(i)(1+2*val_j);  //p(xi=0,Xj=xj)+p(xi=1,Xj=xj)
       //computing randomVariable of p(xi,xj)
       p_xi_xj=A_Tree(j)(i)(2*val_j+val_i);
     }
     else
-    {	
+    {
       throw new Exception("Probability error in double GeneticAlg::CMTree::prob( int i,int val_i,int j,int val_j )");
     }
     (p_xi_xj/p_xj);
   }
-   
+
   def Info(Xi:Int,Xj:Int ):Double={
     (prob(Xi,0,Xj,0)*log((prob(Xi,0,Xj,0)/(prob(Xi,0,Xj)*prob(Xj,0,Xi))))+
 		 prob(Xi,0,Xj,1)*log((prob(Xi,0,Xj,1)/(prob(Xi,0,Xj)*prob(Xj,1,Xi))))+
@@ -237,7 +236,7 @@ class TreeGA( popSize:Int,
            transverseTree(tree,root,p);
            //INSERTING IN POPULATION:
 
-           storage.set(n,p);
+           storage.setChromosomeI(n,p);
            storage.setFitness(n,-1)
 
 
@@ -278,7 +277,7 @@ class TreeGA( popSize:Int,
 	val minimum_A=1e-9;
 	for (i <- 0 until chromosomeLength -1;  j <- (i+1) until chromosomeLength)
 	{
-		
+
 		if (A_Tree(i)(j)(0)>minimum_A)
 		{A_Tree(i)(j)(0)=A_Tree(i)(j)(0)*alphaTree;}
 
@@ -302,13 +301,13 @@ class TreeGA( popSize:Int,
        for (i <- 0 until chromosomeLength-1;  j <- (i+1) until chromosomeLength)
         {
           if (p(i)==0 && p(j)==0) {A_Tree(i)(j)(0) += incTree;}
-    
+
           if (p(i)==0 && p(j)==1) {A_Tree(i)(j)(1) += incTree;}
-    
+
           if (p(i)==1 && p(j)==0) {A_Tree(i)(j)(2) += incTree;}
-    
+
           if (p(i)==1 && p(j)==1) {A_Tree(i)(j)(3) += incTree;}
-    
+
         }
     })
 
@@ -385,7 +384,7 @@ class TreeGA( popSize:Int,
             }).toArray
 
 
-          
+
 
 
 
@@ -448,7 +447,7 @@ class TreeGA( popSize:Int,
 
 
 //       val v1 = Array(8.3137d);
-//       storage.set(0,v1);
+//       storage.setChromosomeI(0,v1);
 //       val v2 = storage.getValue(0);
 //       if (v1(0)!=v2(0)){
 //         val a=1.0;
