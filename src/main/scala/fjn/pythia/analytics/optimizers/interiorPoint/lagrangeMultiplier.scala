@@ -5,75 +5,54 @@ import scalala.tensor.dense.DenseMatrix
 import fjn.pythia.analytics.optimizers.nonlinear.{nonLinearFunctionTrait, derivativesTrait}
 
 /**
- * Created by IntelliJ IDEA.
  * User: fran
  * Date: 1/4/12
  * Time: 9:05 PM
- * To change this template use File | Settings | File Templates.
  */
 
 import util.Random
 
-class lagrangeMultiplier (f: DenseMatrix[Double] => Double,x0:DenseMatrix[Double] ,constraints:List[DenseMatrix[Double] => Double])
-extends derivativesTrait with nonLinearFunctionTrait{
+class lagrangeMultiplier (f: DenseMatrix[Double] => Double,x0:DenseMatrix[Double],
+                          ck0:DenseMatrix[Double],
+                          lk0:DenseMatrix[Double],
+                          constraints:List[DenseMatrix[Double] => Double])
+{
 
-  var ck:Double = 1000;
-  
-  private def pFunc2(xy:DenseMatrix[Double]):Double = {
+  private def pFunc2(x:DenseMatrix[Double])(ck:DenseMatrix[Double],lk:DenseMatrix[Double]):Double = {
 
-     val x:DenseMatrix[Double] = DenseMatrix.zeros[Double](x0.numRows,1)
-     val y:DenseMatrix[Double] = DenseMatrix.zeros[Double](xy.numRows - x0.numRows,1)
-
-
-
-     var n = 0
-     while(n < x0.numRows){
-       x(n,0)= xy(n,0)
-       n += 1
-     }
-
-     n = 0
-     while(n < xy.numRows - x0.numRows){
-       y(n,0)= xy(n + x0.numRows ,0)
-       n += 1
-     }
 
      var r = f(x)
-     n = 0
-     while(n < y.numRows){
+     var n = 0
+
+     while(n < lk.numRows){
        val cctr = constraints(n)(x)
-       r += y(n,0) *  cctr
-       r +=   0.5 * ck * cctr*cctr
+       val v = lk(n,0)
+       val w = ck(n,0)
+       r = r - v *  cctr
+       r = r +   0.5 * w * cctr*cctr
        n += 1
      }
 
      r
    }
 
-
-  val pFunc = pFunc2 _
-  def lagrangeFunctional(x:DenseMatrix[Double]):Double={
-    pFunc(x)   
-  }
-  
   def solve(nIter:Int):DenseMatrix[Double]={
  
 
     //iterate over the sequence of optimization problems:
     var k = 0;
-    var xStart = x0;
+    var xStart = x0.copy;
 
     var xy = DenseMatrix.rand(xStart.numRows + constraints.length,1)  *0.00001
 
+    var lk = lk0.copy
+    var ck = ck0.copy
+
     var n = 0
-    while(n<xStart.numRows)
+
+    while(k<nIter)
     {
-      xy(n,0)=xStart(n,0)
-      n += 1
-    }
-    while(k<50)
-    {
-      val cg = new CGSecantPolakRibiere(lagrangeFunctional,tolerance=1e-5,sigma0=1e-5,jmax=3)
+      val cg = new CGSecantPolakRibiere(pFunc2(_)(ck,lk),tolerance=1e-5,sigma0=1e-5,jmax=5)
 
 
       //kth optimization problem:
@@ -81,31 +60,27 @@ extends derivativesTrait with nonLinearFunctionTrait{
           n = 0
 
 
-          val xres = cg.iterate(200,xy)
+          val xres = cg.iterate(200,xStart)
 
 
-           while(n<xStart.numRows)
-                {
-                  xStart(n,0) = xres(n,0)
-                  n += 1
-                }
-
-                while(n<xy.numRows)
-                {
-                  val gx = constraints(n-xStart.numRows)(xStart)
-                  xy(n,0) = xy(n,0) + ck *  gx
-                  n += 1
-                }
 
 
-          ck = ck * 1.1;
+          while(n<lk.numRows)
+          {
+            val gx = constraints(n)(xStart)
+            lk(n,0) = lk(n,0) - ck(n,0) *  gx
+            n += 1
+          }
+
+
+          ck = ck * 1.01;
       
-          xy = xres.copy
+          xStart = xres.copy
       
       k += 1
     }
 
-    xy
+    xStart
     
   }
 
