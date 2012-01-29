@@ -32,17 +32,17 @@ class testLagrangeMultiplier extends Specification{
     }
 
     def g(x:DenseMatrix[Double]):Double = {
-      x(0,0)-122.33
+      (x(0,0)-2.33)*(x(0,0)-2.33)
      }
 
 
 
 
     val x0 = DenseMatrix.zeros[Double](2,1)
-    x0(0,0)=  110;
-    x0(1,0) = -2.5;
+    x0(0,0)=  0.01;
+    x0(1,0) = 0.1;
 
-    val cg = new lagrangeMultiplier(f,x0,DenseMatrix.ones[Double](1,1)*10,DenseMatrix.rand(1,1),List(g))
+    val cg = new lagrangeMultiplier(f,x0,DenseMatrix.ones[Double](1,1)*100,DenseMatrix.rand(1,1),List(g))
 
     val r = cg.solve(100)
 

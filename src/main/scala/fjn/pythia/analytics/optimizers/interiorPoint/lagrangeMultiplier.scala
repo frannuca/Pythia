@@ -52,7 +52,8 @@ class lagrangeMultiplier (f: DenseMatrix[Double] => Double,x0:DenseMatrix[Double
 
     while(k<nIter)
     {
-      val cg = new CGSecantPolakRibiere(pFunc2(_)(ck,lk),tolerance=1e-5,sigma0=1e-5,jmax=5)
+      val cg = new CGSecantPolakRibiere(pFunc2(_)(ck,lk),tolerance=1e-5,sigma0=1e-5,jmax=15)
+      //val cg = new CGNewtonRaphsonFletcherReeves(pFunc2(_)(ck,lk),tolerance=1e-5,jmax=5)
 
 
       //kth optimization problem:
