@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1878c987-736b-4397-8f91-101ff311efb8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Complex.scala" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Matrix.scala" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea_modules/pythia.iml" afterPath="$PROJECT_DIR$/.idea_modules/pythia.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project/Build.scala" afterPath="$PROJECT_DIR$/project/Build.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Complex.scala" afterPath="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Complex.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Matrix.scala" afterPath="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Matrix.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" afterPath="$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" />
     </list>
     <ignored path="Pythia.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,7 +24,33 @@
   </component>
   <component name="DebuggerManager">
     <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" line="37" class="fjn.pythia.matrix.testMatrix" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" line="44" class="fjn.pythia.matrix.testMatrix" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" line="22" class="fjn.pythia.matrix.testMatrix" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" line="46" class="fjn.pythia.matrix.testMatrix" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -53,7 +76,33 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" line="39" class="fjn.pythia.matrix.testMatrix" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" line="32" class="fjn.pythia.matrix.testMatrix" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" line="14" class="fjn.pythia.matrix.testMatrix" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" line="28" class="fjn.pythia.matrix.testMatrix" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -124,92 +173,94 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Matrix.scala" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Matrix.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Matrix.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="51" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
+            <state line="45" column="4" selection-start="737" selection-end="737" vertical-scroll-proportion="0.41836736">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Double.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/Double.scala">
+      <file leaf-file-name="Expectable.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/matcher/Expectable.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="12" selection-start="876" selection-end="876" vertical-scroll-proportion="0.0">
+            <state line="19" column="0" selection-start="607" selection-end="607" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AnyValCompanion.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/AnyValCompanion.scala">
+      <file leaf-file-name="ResultExecution.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/execute/ResultExecution.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="21" selection-start="921" selection-end="921" vertical-scroll-proportion="0.0">
+            <state line="65" column="0" selection-start="2341" selection-end="2341" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Numeric.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/math/Numeric.scala">
+      <file leaf-file-name="FragmentExecution.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/specification/FragmentExecution.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="195" column="6" selection-start="8493" selection-end="8493" vertical-scroll-proportion="0.0">
+            <state line="52" column="0" selection-start="1615" selection-end="1615" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Ordering.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/math/Ordering.scala">
+      <file leaf-file-name="NotifierRunner.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/runner/NotifierRunner.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="0" selection-start="3149" selection-end="3149" vertical-scroll-proportion="0.0">
+            <state line="9" column="0" selection-start="213" selection-end="213" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Predef.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/Predef.scala">
+      <file leaf-file-name="Result.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/execute/Result.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="56" column="6" selection-start="2449" selection-end="2449" vertical-scroll-proportion="0.0">
+            <state line="236" column="0" selection-start="8854" selection-end="8854" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Complex.scala" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="NullString.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/text/NullString.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="26" selection-start="320" selection-end="320" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Complex.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Complex.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="58" selection-start="1275" selection-end="1275" vertical-scroll-proportion="0.8994083">
+            <state line="156" column="0" selection-start="4828" selection-end="4828" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/package.scala">
+      <file leaf-file-name="testMatrix.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="93" column="39" selection-start="3752" selection-end="3752" vertical-scroll-proportion="0.0">
+            <state line="8" column="17" selection-start="121" selection-end="121" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Fractional.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/math/Fractional.scala">
+      <file leaf-file-name="Complex.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalala/scalala_2.9.1/srcs/scalala_2.9.1-1.0.0.RC2-SNAPSHOT-sources.jar!/scalala/scalar/Complex.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="32" selection-start="600" selection-end="600" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AnyVal.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/AnyVal.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="13" selection-start="1342" selection-end="1342" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="34" column="10" selection-start="1200" selection-end="1205" vertical-scroll-proportion="-4.576923">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -242,11 +293,11 @@
         <option value="$PROJECT_DIR$/src/main/scala/fjn/pythia/networking/commons/Eval.scala" />
         <option value="$PROJECT_DIR$/project/Build.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/DMatrix.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/doublecomplex.java" />
-        <option value="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Matrix.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Complex.java" />
         <option value="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Complex.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Matrix.scala" />
       </list>
     </option>
   </component>
@@ -317,6 +368,50 @@
               <option name="myItemId" value="pythia" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pythia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pythia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scalala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pythia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pythia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scalala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="operators" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -338,8 +433,16 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="project" />
+              <option name="myItemId" value="pythia" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fjn.pythia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matrix" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -348,12 +451,26 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="project" />
+              <option name="myItemId" value="pythia" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Build.scala" />
+              <option name="myItemId" value="fjn.pythia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matrix" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Complex.scala" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pythia" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -1096,21 +1213,22 @@
     <frame x="0" y="0" width="1366" height="728" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37435898" sideWeight="0.48823082" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37434095" sideWeight="0.48501152" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3251318" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="SBT Console" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.456942" sideWeight="0.38572514" order="7" side_tool="false" content_ui="tabs" x="105" y="347" width="1190" height="328" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23901582" sideWeight="0.5634128" order="3" side_tool="true" content_ui="tabs" x="-18" y="316" width="1316" height="319" />
+      <window_info id="SBT Console" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.50615114" sideWeight="0.38355112" order="7" side_tool="false" content_ui="tabs" x="105" y="347" width="1190" height="328" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37434095" sideWeight="0.509608" order="3" side_tool="true" content_ui="tabs" x="-18" y="316" width="1316" height="319" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32136753" sideWeight="0.60895973" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51965815" sideWeight="0.49734244" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23901582" sideWeight="0.43120676" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23901582" sideWeight="0.40737894" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32997763" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23708206" sideWeight="0.19283277" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32953683" sideWeight="0.52136755" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33205226" sideWeight="0.543058" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.2752137" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="347" y="355" width="794" height="225" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33205226" sideWeight="0.62565905" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.6801406" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="347" y="355" width="794" height="225" />
       <window_info id="Maven Repo Search" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32997763" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="ConsoleMavenPlugin" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32997763" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -1118,7 +1236,6 @@
       <window_info id="Archetypes" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven-2 Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32649574" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="BSFConsole" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935154" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1158,7 +1275,7 @@
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
     <option name="CREATE_PATCH_EXPAND_DETAILS_DEFAULT" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring test lagrange multiplier" />
+    <option name="LAST_COMMIT_MESSAGE" value="First implementation of Complex&#10;Matrix first running version for Fractional (Complex,Double)&#10;This implementation makes use of implicit conversion into Fractional[Complex] to make Matrix operations" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -1175,6 +1292,8 @@
     <MESSAGE value="refactoring discrete ga and continuous ga&#10;Starting to add PSO&#10;refactoring Tests&#10;Lagrange multiplier still unstable" />
     <MESSAGE value="refactoring discrete ga and continuous ga&#10;Starting to add PSO&#10;refactoring Tests&#10;Lagrange multiplier still unstable&#10;&#10;Lagrange multilplier modification to include&#10;iterative ck lk schedule" />
     <MESSAGE value="refactoring test lagrange multiplier" />
+    <MESSAGE value="Adding Matrix operations (beta)" />
+    <MESSAGE value="First implementation of Complex&#10;Matrix first running version for Fractional (Complex,Double)&#10;This implementation makes use of implicit conversion into Fractional[Complex] to make Matrix operations" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1184,51 +1303,9 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/scala/fjn/pythia/analytics/optimizers/nonlinear/derivativesTrait.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="17" selection-start="1476" selection-end="1476" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalala/scalala_2.9.1/srcs/scalala_2.9.1-1.0.0.RC2-SNAPSHOT-sources.jar!/scalala/tensor/dense/DenseMatrix.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="356" column="17" selection-start="12272" selection-end="12272" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/specialized.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="6" selection-start="945" selection-end="945" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalala/scalala_2.9.1/srcs/scalala_2.9.1-1.0.0.RC2-SNAPSHOT-sources.jar!/scalala/scalar/Scalar.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="17" selection-start="1776" selection-end="1776" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_01/src.zip!/java/lang/Class.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="10" selection-start="3579" selection-end="3579" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/reflect/ClassManifest.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="41" selection-start="3608" selection-end="3608" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/AnyVal.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="13" selection-start="1342" selection-end="1342" vertical-scroll-proportion="0.0">
+        <state line="25" column="6" selection-start="1233" selection-end="1233" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1240,58 +1317,104 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/AnyValCompanion.scala">
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalala/scalala_2.9.1/srcs/scalala_2.9.1-1.0.0.RC2-SNAPSHOT-sources.jar!/scalala/collection/sparse/SparseArray.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="21" selection-start="921" selection-end="921" vertical-scroll-proportion="0.0">
+        <state line="1141" column="13" selection-start="35423" selection-end="35423" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Matrix.scala">
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalala/scalala_2.9.1/srcs/scalala_2.9.1-1.0.0.RC2-SNAPSHOT-sources.jar!/scalala/scalar/Scalar.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="51" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
+        <state line="215" column="1" selection-start="7641" selection-end="7641" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#2339#7641#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalala/scalala_2.9.1/srcs/scalala_2.9.1-1.0.0.RC2-SNAPSHOT-sources.jar!/scalala/operators/OpType.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="6" selection-start="1033" selection-end="1033" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/math/Ordering.scala">
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalala/scalala_2.9.1/srcs/scalala_2.9.1-1.0.0.RC2-SNAPSHOT-sources.jar!/scalala/operators/BinaryOp.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="0" selection-start="3149" selection-end="3149" vertical-scroll-proportion="0.0">
+        <state line="34" column="55" selection-start="1237" selection-end="1237" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/package.scala">
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/text/NullString.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="39" selection-start="3752" selection-end="3752" vertical-scroll-proportion="0.0">
+        <state line="14" column="26" selection-start="320" selection-end="320" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/math/Fractional.scala">
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/execute/Result.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="32" selection-start="600" selection-end="600" vertical-scroll-proportion="0.0">
+        <state line="236" column="0" selection-start="8854" selection-end="8854" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/Double.scala">
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/execute/ResultExecution.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="12" selection-start="876" selection-end="876" vertical-scroll-proportion="0.0">
+        <state line="65" column="0" selection-start="2341" selection-end="2341" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.9.1-sources.jar!/scala/math/Numeric.scala">
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/runner/NotifierRunner.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="195" column="6" selection-start="8493" selection-end="8493" vertical-scroll-proportion="0.0">
+        <state line="9" column="0" selection-start="213" selection-end="213" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/specification/FragmentExecution.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="52" column="0" selection-start="1615" selection-end="1615" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.scalala/scalala_2.9.1/srcs/scalala_2.9.1-1.0.0.RC2-SNAPSHOT-sources.jar!/scalala/scalar/Complex.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="10" selection-start="1200" selection-end="1205" vertical-scroll-proportion="-4.576923">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.ivy2/cache/org.specs2/specs2_2.9.1/srcs/specs2_2.9.1-1.5-sources.jar!/org/specs2/matcher/Expectable.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="607" selection-end="607" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Complex.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="58" selection-start="1275" selection-end="1275" vertical-scroll-proportion="0.8994083">
+        <state line="156" column="0" selection-start="4828" selection-end="4828" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/fjn/pythia/matrix/testMatrix.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="17" selection-start="121" selection-end="121" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/fjn/pythia/matrix/Matrix.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="4" selection-start="737" selection-end="737" vertical-scroll-proportion="0.41836736">
           <folding />
         </state>
       </provider>

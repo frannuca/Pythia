@@ -11,17 +11,16 @@ import scala.Array
  */
 
 
-class Matrix[@specialized(Int,Short,Long,Float,Double,Complex)T1](nRows:Int,nCols:Int, isRowMajor:Boolean=true)(implicit m:Fractional[T1],implicit val m2:Manifest[T1]) {
+import Complex._
+class Matrix[T1](nRows:Int,nCols:Int, isRowMajor:Boolean=true)(implicit m2:Manifest[T1], implicit val m:Fractional[T1]) {
 
-  def mul(a:T1,b:T1):T1 = m.times(a,b)
-  def add(a:T1,b:T1):T1 = m.plus(a,b)
-  def div(a:T1,b:T1):T1 = m.times(a, m.div(m.one,b))
-  def sub(a:T1,b:T1):T1 = m.minus(a,b)
+  private val data:Array[T1] =
+    (for (k <- 0 until (nCols*nRows)
 
-  private val data:Array[T1]= new Array[T1](nCols*nRows)
+    )yield m.zero).toArray
 
   
-      
+
   def apply(row:Int, col:Int):T1={
 
      val index = isRowMajor match
@@ -30,9 +29,9 @@ class Matrix[@specialized(Int,Short,Long,Float,Double,Complex)T1](nRows:Int,nCol
        case false => row*numberCols + col
      }
 
-     return data(index)
+      data(index)
   }
-  
+
   def getColArray(i:Int):Array[T1]={
 
     val r =
@@ -41,18 +40,17 @@ class Matrix[@specialized(Int,Short,Long,Float,Double,Complex)T1](nRows:Int,nCol
     ) yield r
     r.toArray
   }
-  
+
   def getRowArray(j:Int):Array[T1]={
 
-    (for (n <- 0  until this.numberCols;
-             val r = this.apply(j,n)
-        ) yield r) toArray
+    (for (n <- 0  until this.numberCols
+        ) yield this.apply(j,n)) toArray
   }
-  
+
   val numberRows = nRows
   val numberCols = nCols
-  
-  def zeros()={
+
+  def zeros:Unit={
       var i:Int=0;
       while(i<numberCols)
       {
@@ -64,20 +62,20 @@ class Matrix[@specialized(Int,Short,Long,Float,Double,Complex)T1](nRows:Int,nCol
         }
       }
   }
-  
-  def eye():Unit ={
+
+  def eye:Unit ={
     zeros()
     val limit = math.min(numberRows,numberRows)
     var i=0
     while(i<limit)
     {
-      this.set(i,i, m.one)     
+      this.set(i,i, m.one)
 
     }
   }
 
-  
-  def set(row:Int, col:Int,v:T1):Unit={
+
+  def set[T2 <% T1](row:Int, col:Int,v:T2):Unit={
 
     val index = isRowMajor match
          {
@@ -86,6 +84,8 @@ class Matrix[@specialized(Int,Short,Long,Float,Double,Complex)T1](nRows:Int,nCol
          }
 
          data(index) = v
+
+    Unit
   }
 
   def *(b: Matrix[T1]): Matrix[T1] = {
@@ -106,16 +106,15 @@ class Matrix[@specialized(Int,Short,Long,Float,Double,Complex)T1](nRows:Int,nCol
         while (k < b.numberRows) {
           val v1:T1 = this.apply(i, k)
           val v2:T1 = b(k, j)
-          val v3:T1 = mul(v1,v2)
-          
-          val r:T1 = add(elem,v3)
+          val v3:T1 = m.times(v1,v2)
+          val r:T1 = m.plus (elem,v3)
           elem = r
           k = k + 1
         }
         rMatrix.set(i, j, elem)
-        j = j + 1       
+        j = j + 1
       }
-      
+
       i = i + 1
     }
 
