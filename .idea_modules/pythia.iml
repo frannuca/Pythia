@@ -28,7 +28,13 @@
     <orderEntry type="library" name="ch.qos.logback_logback-classic_0.9.16" level="project" />
     <orderEntry type="library" name="org.codehaus.jackson_jackson-core-lgpl_1.7.2" level="project" />
     <orderEntry type="library" name="org.slf4j_jcl-over-slf4j_1.6.3" level="project" />
-    <orderEntry type="library" name="org.slf4j_slf4j-api_1.6.3" level="project" />
+    <orderEntry type="library" name="org.scala-lang_scala-compiler_2.9.1" level="project" />
+    <orderEntry type="library" name="com.googlecode.scalascriptengine_scalascriptengine_0.6.3" level="project" />
+    <orderEntry type="library" name="org.scala-tools.time_time_2.9.1_0.5" level="project" />
+    <orderEntry type="library" name="joda-time_joda-time_1.6.2" level="project" />
+    <orderEntry type="library" name="org.slf4j_slf4j-api_1.6.4" level="project" />
+    <orderEntry type="library" name="com.googlecode.scalaconcurrency_scalaconcurrency_0.7.0" level="project" />
+    <orderEntry type="library" name="net.java.dev.jna_jna_3.4.0" level="project" />
     <orderEntry type="library" name="com.googlecode.matrix-toolkits-java_mtj_0.9.14" level="project" />
     <orderEntry type="library" name="com.googlecode.netlib-java_netlib-java_0.9.3" level="project" />
     <orderEntry type="library" name="net.sourceforge.f2j_arpack_combined_all_0.1" level="project" />
@@ -60,7 +66,6 @@
     <orderEntry type="library" name="org.apache.xmlgraphics_xmlgraphics-commons_1.3.1" level="project" />
     <orderEntry type="library" name="commons-logging_commons-logging_1.0.4" level="project" />
     <orderEntry type="library" name="commons-lang_commons-lang_2.4" level="project" />
-    <orderEntry type="library" name="joda-time_joda-time_1.6" level="project" />
     <orderEntry type="library" scope="TEST" name="org.scalatest_scalatest_2.9.0_1.4.1" level="project" />
     <orderEntry type="library" scope="TEST" name="org.specs2_specs2_2.9.1_1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="org.scala-tools.testing_scalacheck_2.9.0-1_1.9" level="project" />

@@ -39,6 +39,8 @@ object ShellPrompt {
 }
 
 object Resolvers {
+
+  val jna = "JNA" at "https://jna.dev.java.net"
   val sunrepo    = "Sun Maven2 Repo" at "http://download.java.net/maven/2"
   val sunrepoGF  = "Sun GF Maven2 Repo" at "http://download.java.net/maven/glassfish"
   val oraclerepo = "Oracle Maven2 Repo" at "http://download.oracle.com/maven"
@@ -47,7 +49,7 @@ object Resolvers {
   val akkarepo ="Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 
   val oracleResolvers = Seq (sunrepo, sunrepoGF, oraclerepo)
-  val mathResolvers = Seq(sunrepo,googlematrixrepo,apacheMathrepo)
+  val mathResolvers = Seq(sunrepo,googlematrixrepo,apacheMathrepo,jna)
   val akkaResolver = Seq(akkarepo)
   val rsl = "Scala Tools Snapshots" at "http://scala-tools.org/repo-snapshots"
   val rs2 = "ScalaNLP Maven2" at "http://repo.scalanlp.org/repo"
@@ -78,6 +80,8 @@ object Dependencies {
   val grizzlyutils    = "com.sun.grizzly" % "grizzly-utils"     % grizzlyVer
   val grizzlyportunif = "com.sun.grizzly" % "grizzly-portunif"  % grizzlyVer
 
+
+
   val sleepycat = "com.sleepycat" % "je" % "4.0.92"
 
   val apachenet   = "commons-net"   % "commons-net"   % "2.0"
@@ -99,6 +103,10 @@ object Dependencies {
   val logback_core = "ch.qos.logback" % "logback-core" % "0.9.24" % "compile" //LGPL 2.1
   val logback_classic = "ch.qos.logback" % "logback-classic" % "0.9.24" % "compile" //LGPL 2.1
   val log4j_over_slf4j = "org.slf4j" % "jcl-over-slf4j" % "1.6.3"
+
+
+  val evalscript = "com.googlecode.scalascriptengine" % "scalascriptengine" % "0.6.3"
+  val scalaCompiler = "org.scala-lang" % "scala-compiler" % BuildSettings.buildScalaVersion
 
   val Scalala =    "org.scalala" %% "scalala" % "1.0.0.RC2-SNAPSHOT" intransitive () withSources()
   //def Scalala =  "org.scalala" % "scalala_2.9.0-1" % "1.0.0.RC2EFG" intransitive () withSources()
@@ -129,6 +137,9 @@ object Dependencies {
 
 
   def baseDirectories = "file://C:/code/libs/jogl-1.1.1-windows-i586/lib/"
+
+
+  lazy val jnalib =  "net.java.dev.jna" % "jna" % "3.4.0"
   //def extraJars = descendents(baseDirectories, "*.jar")
 
  // override def unmanagedClasspath = super.unmanagedClasspath +++ extraJars
@@ -148,7 +159,10 @@ object PythiaBuild extends Build {
     logbackclassic,
     jacksonjson,
     scalatest,
-    log4j_over_slf4j
+    log4j_over_slf4j,
+    scalaCompiler,
+    evalscript,
+    jnalib
   )
 
   val serverDeps = Seq (
