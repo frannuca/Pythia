@@ -40,7 +40,7 @@ object ShellPrompt {
 
 object Resolvers {
 
-  val jna = "JNA" at "https://jna.dev.java.net"
+  val jna = "JNA" at "https://github.com/twall/jna"
   val sunrepo    = "Sun Maven2 Repo" at "http://download.java.net/maven/2"
   val sunrepoGF  = "Sun GF Maven2 Repo" at "http://download.java.net/maven/glassfish"
   val oraclerepo = "Oracle Maven2 Repo" at "http://download.oracle.com/maven"
@@ -105,9 +105,6 @@ object Dependencies {
   val log4j_over_slf4j = "org.slf4j" % "jcl-over-slf4j" % "1.6.3"
 
 
-  val evalscript = "com.googlecode.scalascriptengine" % "scalascriptengine" % "0.6.3"
-  val scalaCompiler = "org.scala-lang" % "scala-compiler" % BuildSettings.buildScalaVersion
-
   val Scalala =    "org.scalala" %% "scalala" % "1.0.0.RC2-SNAPSHOT" intransitive () withSources()
   //def Scalala =  "org.scalala" % "scalala_2.9.0-1" % "1.0.0.RC2EFG" intransitive () withSources()
   /**2D plotting library, used indirectly through Scalala */
@@ -139,8 +136,7 @@ object Dependencies {
   def baseDirectories = "file://C:/code/libs/jogl-1.1.1-windows-i586/lib/"
 
 
-  lazy val jnalib =  "net.java.dev.jna" % "jna" % "3.4.0"
-  //def extraJars = descendents(baseDirectories, "*.jar")
+  lazy val jnalib = "net.java.dev.jna" % "jna" % "3.2.2"  //def extraJars = descendents(baseDirectories, "*.jar")
 
  // override def unmanagedClasspath = super.unmanagedClasspath +++ extraJars
 }
@@ -160,8 +156,6 @@ object PythiaBuild extends Build {
     jacksonjson,
     scalatest,
     log4j_over_slf4j,
-    scalaCompiler,
-    evalscript,
     jnalib
   )
 
