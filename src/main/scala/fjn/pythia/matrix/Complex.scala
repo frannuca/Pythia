@@ -2,6 +2,7 @@ package fjn.pythia.matrix
 
 import scala.math.{ Fractional, Numeric, Ordering };
 
+//Simple Complex class with normal operators
 case class Complex(real : Double, imag : Double) {
   override def toString = real + " + " + imag + "i";
 
@@ -89,7 +90,11 @@ case class Complex(real : Double, imag : Double) {
   }
 }
 
-object Complex { outer =>
+/**The companion object   provides the following features:
+ * Access to null and neuter element of the  space
+ * implicit conversion to Fractional <- Numeric <- Ordered
+*/
+object Complex { self =>
 
   /** Constant Complex(0,0). */
   val zero = new Complex(0,0);
@@ -103,19 +108,11 @@ object Complex { outer =>
   /** Constant Complex(0,1). */
   val i = new Complex(0,1);
 
-  //
-  // scalar
-  //
-    //
-  // scala.math.Numeric and scala.math.Fractional
-  //
-  // TODO: Implement scala.math.Integral trait, if this is ever required
-  //       for some reason.
 
-  /** `Complex` as `scala.math.Numeric` trait.
-    * Conversions to `Int`, `Long`, `Float` and `Double` are only performed
-    * if the imaginary component of the complex number is exactly 0. */
-  trait ComplexIsConflicted extends Numeric[Complex] {
+  /**
+   * Implementation of the  Numeric Trait with implicit conversion
+   */
+  trait ComplexNumeric extends Numeric[Complex] {
     def plus(x: Complex, y: Complex): Complex = x + y
     def minus(x: Complex, y: Complex): Complex = x - y
     def times(x: Complex, y: Complex): Complex = x * y
@@ -134,7 +131,7 @@ object Complex { outer =>
     }
   }
   /** `Complex` as `scala.math.Fractional` trait. */
-  trait ComplexIsFractional extends ComplexIsConflicted
+  trait ComplexFractional extends ComplexNumeric
 		            with Fractional[Complex]
   {
     def div(x: Complex, y: Complex): Complex = x / y
@@ -150,11 +147,9 @@ object Complex { outer =>
       else 0;
     }
   }
-  /** Implicit object providing `scala.math.Fractional` capabilities.
-    * Although complex numbers have no natural ordering, some kind of
-    * `Ordering` is required because `Numeric` extends `Ordering`.  Hence,
-    * an ordering based upon the real then imaginary components is used. */
-  implicit object ComplexIsFractional extends ComplexIsFractional
+  /** Implicit object to provide automatic conversion to Fractional. This implicit is used on Matrix type to retrieve
+   * Numerica deaults values*/
+  implicit object ComplexFractional extends ComplexFractional
                                       with ComplexOrdering
   
 

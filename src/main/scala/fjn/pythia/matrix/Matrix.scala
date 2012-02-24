@@ -44,13 +44,13 @@ class Matrix[T1](nRows:Int,nCols:Int, isRowMajor:Boolean=true)(implicit m2:Manif
   def getRowArray(j:Int):Array[T1]={
 
     (for (n <- 0  until this.numberCols
-        ) yield this.apply(j,n)) toArray
+        ) yield this.apply(j,n)).toArray
   }
 
   val numberRows = nRows
   val numberCols = nCols
 
-  def zeros:Unit={
+  def zeros={
       var i:Int=0;
       while(i<numberCols)
       {
@@ -60,16 +60,18 @@ class Matrix[T1](nRows:Int,nCols:Int, isRowMajor:Boolean=true)(implicit m2:Manif
           this.set(i,j,m.zero)
           j+=1
         }
+        i = i + 1
       }
   }
 
-  def eye:Unit ={
-    zeros()
+  def eye ={
+    zeros
     val limit = math.min(numberRows,numberRows)
     var i=0
     while(i<limit)
     {
       this.set(i,i, m.one)
+      i = i + 1
 
     }
   }
