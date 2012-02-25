@@ -130,7 +130,7 @@ object Dependencies {
 
 
 
-  val metroDep = "com.sun.xml.ws" % "webservices" % "2.1-b15"
+ // val metroDep = "com.sun.xml.ws" % "webservices" % "2.1-b15"
 
 
   def baseDirectories = "file://C:/code/libs/jogl-1.1.1-windows-i586/lib/"
@@ -186,7 +186,7 @@ object PythiaBuild extends Build {
     "pythia",
     file ("."),
     settings = buildSettings++ SbtOneJar.oneJarSettings ++ Seq (resolvers :=  mathResolvers ++ akkaResolver ++ scalalaResolver, libraryDependencies ++= commonDeps
-      ++ matrixDeps ++ apacheMath ++plotDeps ++akkaDeps ++ Seq(metroDep) ++ Seq(Scalala,JFreeCommon,JFreeChart,XmlGraphicsCommons,CommonsIo,CommonsLang,JodaTime))
+      ++ matrixDeps ++ apacheMath ++plotDeps ++akkaDeps  ++ Seq(Scalala,JFreeCommon,JFreeChart,XmlGraphicsCommons,CommonsIo,CommonsLang,JodaTime))
   ) //aggregate (optimizer,ia, fjn.fjn.fjn.pythia.pricers)
 
 
