@@ -17,7 +17,7 @@ class TreeGA( popSize:Int,
               minLevel:Array[Double],
               maxLevel:Array[Double],
               pFunc:(Array[Double])=>Double,
-              mutationProb:Double) extends tAlgorithm {
+              mutationProb:Double) extends tAlgorithm[Double] {
 
 
 

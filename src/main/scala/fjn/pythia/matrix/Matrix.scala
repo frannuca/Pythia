@@ -21,9 +21,11 @@ import Complex._
 
 object MatrixConstants {
   var numberOfCores: Int = 1
+
 };
 
-class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCoresv: Int = -1)(implicit m2: Manifest[T1], implicit val m: Fractional[T1]) {
+
+class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCoresv: Int = -1)(implicit m2: Manifest[T1], implicit val m: Fractional[T1]){
 
   outer =>
 
@@ -32,6 +34,7 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
   if (numberOfCoresv >= 1)
     numberOfCores = numberOfCoresv
 
+  def getArray() = data
 
   private var data: Array[T1] = new Array[T1](nCols * nRows)
 
@@ -96,9 +99,9 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
   trait MatrixLineIterator extends Iterator[T1]
   {
     protected var position:Int = -1
-    protected val start:Int = _
-    protected val step:Int  = _
-    val maxCount:Int  = _
+    protected val start:Int
+    protected val step:Int
+    val maxCount:Int
     def hasNext:Boolean = (position+1)<maxCount
     def next:T1=
     {  
@@ -205,6 +208,7 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
     Unit
   }
 
+  
   def *(a:T1):Matrix[T1]={
   
     val rMatrix: Matrix[T1] = new Matrix[T1](this.numberRows, this.numberCols);
@@ -258,6 +262,12 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
   
     }
   
+  
+ override def clone():Matrix[T1]={
+    val out = new Matrix[T1](this.numberRows,this.numberCols)
+    this.data.copyToArray(out.data)
+    out
+  }
   
   def unary_+ : Matrix[T1]={
     val out = new Matrix[T1](this.numberRows,this.numberCols)

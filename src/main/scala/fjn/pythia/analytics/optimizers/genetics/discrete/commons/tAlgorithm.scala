@@ -3,7 +3,7 @@ package fjn.pythia.analytics.optimizers.genetics.discrete.commons
 import collection.mutable.ListBuffer
 
 
-trait tAlgorithm{
+trait tAlgorithm[T]{
 
   /**
    * Evolution of the tAlgorithm is performed through calls to next
@@ -17,7 +17,7 @@ trait tAlgorithm{
   /**
    * Fitness/Error function to be used for optimization
    */
-  val pFitness:(Array[Double]) => Double
+  val pFitness:(Array[T]) => T
 
   /**
    * Calls the next function  iteration number of times.
