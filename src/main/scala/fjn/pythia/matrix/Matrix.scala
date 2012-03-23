@@ -34,7 +34,7 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
   if (numberOfCoresv >= 1)
     numberOfCores = numberOfCoresv
 
-  def getArray() = data
+  def getArray():Array[T1] = data
 
   private var data: Array[T1] = new Array[T1](nCols * nRows)
 
@@ -214,21 +214,24 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
     val rMatrix: Matrix[T1] = new Matrix[T1](this.numberRows, this.numberCols);
     var i = 0
     while(i<rMatrix.data.length)
-      rMatrix.data(i)= m.plus(this.data(i),a)
+      {
+        rMatrix.data(i)= m.times(this.data(i),a)
+        i = i + 1
+      }
 
     rMatrix
   }
 
   
   def +(b:Matrix[T1]): Matrix[T1] = {
-    require(this.numberCols == b.numberRows && this.numberRows == b.numberRows)
+    require(this.numberCols == b.numberCols && this.numberRows == b.numberRows)
     val rMatrix: Matrix[T1] = new Matrix[T1](this.numberRows, this.numberCols);
     var i = 0
     var j = 0
     while (i < rMatrix.numberRows) {
       j = 0
       
-      val iterator2 = b.getRowArrayIterator(j)
+      val iterator2 = b.getRowArrayIterator(i)
       val iterator1 = this.getRowArrayIterator(i)
       while (j < rMatrix.numberCols) {        
         rMatrix.set(i, j, m.plus ( iterator1.next , iterator2.next))
@@ -242,14 +245,14 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
   }
   
   def -(b:Matrix[T1]): Matrix[T1] = {
-      require(this.numberCols == b.numberRows && this.numberRows == b.numberRows)
+      require(this.numberCols == b.numberCols && this.numberRows == b.numberRows)
       val rMatrix: Matrix[T1] = new Matrix[T1](this.numberRows, this.numberCols);
       var i = 0
       var j = 0
       while (i < rMatrix.numberRows) {
         j = 0
         
-        val iterator2 = b.getRowArrayIterator(j)
+        val iterator2 = b.getRowArrayIterator(i)
         val iterator1 = this.getRowArrayIterator(i)
         while (j < rMatrix.numberCols) {        
           rMatrix.set(i, j, m.minus ( iterator1.next , iterator2.next))

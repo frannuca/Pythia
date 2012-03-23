@@ -72,7 +72,7 @@ class testMatrix extends Specification {
 //
 
       val mM1 = 200
-      val mM2 =300
+      val mM2 =200
       val mM3 = 200
       val ms1 = DenseMatrix.zeros[Double](mM1,mM2)
       println("creating ms2 eye")
@@ -123,14 +123,14 @@ class testMatrix extends Specification {
         
 
               val start2:Long = System.currentTimeMillis();
-              val ms3 = ms1 * ms2;
+              val ms3 = ms1 * ms2 + ms1*2.0-ms2*1.5;
               val stop2:Long = System.currentTimeMillis();
   
         
 
 
               val start:Long = System.currentTimeMillis();
-              val m6 = m1*m2
+              val m6 = m1*m2+ m1*2.0 -m2*1.5
               val stop:Long = System.currentTimeMillis();
 
 

@@ -22,7 +22,15 @@ class testSWARM extends Specification{
   
       def `testAlgorithm` = {
 
-           val swarm = new SwarmGA(localfitness,1,2,List(0d,0d).toArray,List(1d,1d).toArray,0.6,2,2,2)
+           val swarm = new SwarmGA(localfitness,5,10,List(-10d,-10d).toArray,List(10d,10d).toArray,0.0,2,1.0,2.0)
+
+        for(i<- 0 until 50)
+          {
+            swarm.next();
+          }
+
+        println(swarm.population.gBest.toString())
+        println(swarm.population.gBest.bestFitnessValueNow)
            true
       }
 
@@ -30,10 +38,10 @@ class testSWARM extends Specification{
 
             val ve =
               for (t <- x;
-            val aux:Double = java.lang.Math.sin((t-0.5)*0.5)/(java.lang.Math.abs((t-0.5)*0.5))
+            val aux:Double = (t-5)*(t-5)
             )yield aux
 
 
-            ve.foldLeft(0.0)((a,v)=> a+v)
+           ve.foldLeft(0.0)((a,v)=> a+v)
           }
 }

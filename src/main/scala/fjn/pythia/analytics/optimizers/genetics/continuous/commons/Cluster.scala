@@ -17,17 +17,18 @@ case class Particle(min: Array[Double], max: Array[Double]) {
   require(min.length == max.length)
   require(min.length > 0)
 
+  val size = min.length
   var pNow: Matrix[Double] = new Matrix[Double](size, 1)
   var pBest: Matrix[Double] = new Matrix[Double](size, 1)
   var velocity = new Matrix[Double](size, 1)
-  var fitnessValueNow: Double = 0.0
-  var bestFitnessValueNow: Double = 0.0
+  var fitnessValueNow: Double = 1e9
+  var bestFitnessValueNow: Double = 1e9
 
 
   private val rndGen = new Random()
 
 
-  val size = min.length
+
 
   val limits: Array[Component] =
     (for (n <- 0 until size;
@@ -42,7 +43,7 @@ case class Particle(min: Array[Double], max: Array[Double]) {
 
 
   for (i <- 0 until velocity.numberRows) {
-    velocity.set(i, 0, rndGen.nextDouble() * (max(i) - min(i)))
+    velocity.set(i, 0, 0.1*rndGen.nextDouble() * (max(i) - min(i)))
   }
 
 
@@ -62,6 +63,14 @@ case class Particle(min: Array[Double], max: Array[Double]) {
     newParticle
   }
 
+  
+  override def toString():String = {
+    val strBld = new StringBuilder()
+    strBld.append("pnow=" )append pNow.toString() append  "\n" append
+           "pBest=" append pBest.toString
+
+    strBld.toString()
+  }
 }
 
 case class Cluster(numberOfParticles: Int, minLimit: Array[Double], maxLimit: Array[Double]) {
@@ -85,7 +94,7 @@ case class Cluster(numberOfParticles: Int, minLimit: Array[Double], maxLimit: Ar
 }
 
 class SwarmPop(numberOfCluster: Int, numberOfParticlesPerCluster: Int, minLimit: Array[Double], maxLimit: Array[Double], pFunc: (Matrix[Double]) => Double,
-               c1: Double, c2: Double, w: Double) {
+               c1: Double, c2: Double, c3: Double, w: Double) {
 
   private val randGen = new Random()
 
@@ -95,121 +104,153 @@ class SwarmPop(numberOfCluster: Int, numberOfParticlesPerCluster: Int, minLimit:
           val c = Cluster(numberOfParticlesPerCluster, minLimit, maxLimit)
     ) yield c).toArray
 
+  computerFitness(true)
+
   var gBest = Particle(minLimit, maxLimit)
 
 
+  private def updateBestParticle(continue: Boolean):Boolean = {
 
-  private def updateBestParticle(): Unit = {
-
-    listOfClusters.foreach(
-      cluster => {
-        cluster.particles.foreach(
-          particle => {
-            if (particle.bestFitnessValueNow < cluster.clusterBestParticle.bestFitnessValueNow) {
-              cluster.clusterBestParticle = particle.clone()
-            }
-          }
-        )
-        if (cluster.clusterBestParticle.bestFitnessValueNow < this.gBest.bestFitnessValueNow) {
-          gBest = cluster.clusterBestParticle.clone()
-        }
-      }
-    )
-
-  }
-
-  private def computerFitness(): Unit = {
-    listOfClusters.foreach(
-      cluster => {
-        cluster.particles.foreach(
-          particle => {
-
-            particle.fitnessValueNow = pFunc(particle.pNow)
-            if (particle.fitnessValueNow < particle.bestFitnessValueNow) {
-              particle.bestFitnessValueNow = particle.fitnessValueNow
-              particle.pBest = particle.pNow.clone()
-            }
-          }
-        )
-      }
-    )
-
-    updateBestParticle()
-  }
-
-  private def moveParticles(): Boolean = {
-
-
-    var allParticlesInBoundaries = true
-    for (cluster <- listOfClusters) {
-
-      for (particle <- cluster.particles) {
-
-        val r1 = randGen.nextDouble()
-        val r2 = randGen.nextDouble()
-
-        particle.velocity =
-          particle.velocity * w +
-            (particle.pBest - particle.pNow) * r1 * c1 +
-            (gBest.pNow - particle.pNow) * r2 * c2
-
-
-        particle.pNow = particle.pNow + particle.velocity
-        ////
-        //Todo: the particle must stay in boundaries, implement here bouncing algorithm
-        ////
-        var counter = 0
-
-        allParticlesInBoundaries = true
-        while (allParticlesInBoundaries && counter < 50) {
-          counter = counter + 1
-          val offendingInboundary = {
-            val cArray = particle.pNow.getArray()
-            for (i <- 0 until cArray.length;
-                 val r =
-                 if (particle.min(i) > cArray(i)) {
-                   Some((i, -1, particle.min(i)))
-                 }
-                 else if (cArray(i) > particle.max(i)) {
-                   Some((i, 1, particle.max(i)))
-                 }
-                 else None
-
-            ) yield r
-          }
-
-          allParticlesInBoundaries =
-            offendingInboundary.forall(z => z match {
-              case None => false;
-              case Some(k) => true
-            })
-
-          offendingInboundary.filter(z => z match {
-            case None => false;
-            case Some(k) => true
-          })
-
-          offendingInboundary.flatMap(a => a).foreach(
-            p => {
-              val i = p._1
-              val isMax = p._2 > 0
-
-              if (isMax) {
-                var x = particle.pNow(i, 0)
-                val limit = p._3
-
-                x = limit - 0.65 * (x - limit)
-                particle.pNow.set(i, 0, x)
+    if (continue) {
+      try {
+        listOfClusters.foreach(
+          cluster => {
+            cluster.particles.foreach(
+              particle => {
+                if (particle.bestFitnessValueNow < cluster.clusterBestParticle.bestFitnessValueNow) {
+                  cluster.clusterBestParticle = particle.clone()
+                }
               }
+            )
+            if (cluster.clusterBestParticle.bestFitnessValueNow < this.gBest.bestFitnessValueNow) {
+              gBest = cluster.clusterBestParticle.clone()
             }
-          )
-        }
+          }
+        )
 
-
+        true
+      }
+      catch {
+        case _ => false;
       }
     }
-    allParticlesInBoundaries
+    else false
 
   }
+
+  private def computerFitness(continue:Boolean):Boolean = {
+    if (continue)
+    {
+      listOfClusters.foreach(
+            cluster => {
+              cluster.particles.foreach(
+                particle => {
+
+                  particle.fitnessValueNow = pFunc(particle.pNow)
+                  if (particle.fitnessValueNow < particle.bestFitnessValueNow) {
+                    particle.bestFitnessValueNow = particle.fitnessValueNow
+                    particle.pBest = particle.pNow.clone()
+                  }
+                }
+              )
+            }
+          )
+      true
+    }
+    else
+      false
+
+  }
+
+  private def moveParticles(continue:Boolean): Boolean = {
+
+
+    if(continue){
+      var allParticlesInBoundaries = true
+          for (cluster <- listOfClusters) {
+
+            for (particle <- cluster.particles) {
+
+              val r1 = randGen.nextDouble()
+              val r2 = randGen.nextDouble()
+              val r3 = randGen.nextDouble()
+
+              val  newv =
+                particle.velocity * w +
+                  (particle.pBest - particle.pNow) * r1 * c1 +
+                  (gBest.pNow - particle.pNow) * r2 * c2 +
+                  (cluster.clusterBestParticle.pBest - particle.pNow) * r3 * c3
+
+
+              particle.velocity = particle.velocity + newv;
+              particle.pNow = particle.pNow + particle.velocity
+              ////
+              //Todo: the particle must stay in boundaries, implement here bouncing algorithm
+              ////
+              var counter = 0
+
+              allParticlesInBoundaries = true
+              while (allParticlesInBoundaries && counter < 50) {
+                counter = counter + 1
+                val offendingInboundary = {
+                  val cArray = particle.pNow.getArray()
+                  for (i <- 0 until cArray.length;
+                       val r =
+                       if (particle.min(i) > cArray(i)) {
+                         Some((i, -1, particle.min(i)))
+                       }
+                       else if (cArray(i) > particle.max(i)) {
+                         Some((i, 1, particle.max(i)))
+                       }
+                       else None
+
+                  ) yield r
+                }
+
+                allParticlesInBoundaries =
+                  offendingInboundary.forall(z => z match {
+                    case None => true;
+                    case Some(k) => false
+                  })
+
+                offendingInboundary.filter(z => z match {
+                  case None => false;
+                  case Some(k) => true
+                })
+
+                offendingInboundary.flatMap(a => a).foreach(
+                  p => {
+                    val i = p._1
+                    val isMax = p._2 > 0
+
+                    var x = particle.pNow(i, 0)
+                    val limit = p._3
+
+                    if (isMax) {
+                      x = limit - 0.3 * (x - limit)
+                      particle.pNow.set(i, 0, x)
+                    }
+                    else
+                    {
+                      x = limit + 0.3 * (limit - x)
+                      particle.pNow.set(i, 0, x)
+                    }
+                  }
+                )
+              }
+
+
+            }
+          }
+          true
+
+    }
+    else false
+
+  }
+
+
+  val algorithmComposition=   ( (x:Boolean) => moveParticles(x)) andThen  (y=>computerFitness(y))  andThen ( (z:Boolean)=>updateBestParticle(z))
+
 }
 

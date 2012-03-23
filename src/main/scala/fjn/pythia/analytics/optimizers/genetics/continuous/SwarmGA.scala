@@ -13,13 +13,17 @@ import fjn.pythia.matrix.Matrix
 */
 
 /**
-*
-* @param pFitnessv: error function to be optimized
-* @param numberOfCluster: Number of clusters
-* @param numberOfParticlePerCluster : Number of particle per cluster
-* @param minLimit : particle lower bounds
-* @param maxLimit : particle upper bounds
-*/
+ *
+ * @param pFitness
+ * @param numberOfCluster
+ * @param numberOfParticlePerCluster
+ * @param minLimit
+ * @param maxLimit
+ * @param velocityMomentum
+ * @param towardsGlobalAcceleration
+ * @param towardsClusterAcceleration
+ * @param towardsBestParticleAcceleration
+ */
 case class SwarmGA(pFitness:(Array[Double]) => Double,numberOfCluster:Int,
                       numberOfParticlePerCluster:Int,
                       minLimit:Array[Double],maxLimit:Array[Double],
@@ -37,13 +41,14 @@ case class SwarmGA(pFitness:(Array[Double]) => Double,numberOfCluster:Int,
 
   val particleDimension = minLimit.length
 
-  private var population:SwarmPop=init()
+  var population:SwarmPop=init()
+
 
 
   private def init():SwarmPop={
 
      new SwarmPop(numberOfCluster,numberOfParticlePerCluster,minLimit,maxLimit,pFitnessTranformation,
-       towardsGlobalAcceleration,towardsClusterAcceleration,towardsBestParticleAcceleration)
+       towardsGlobalAcceleration,towardsClusterAcceleration,towardsBestParticleAcceleration,velocityMomentum)
 
   }
   def pFitnessTranformation(x:Matrix[Double]):Double =
@@ -53,22 +58,12 @@ case class SwarmGA(pFitness:(Array[Double]) => Double,numberOfCluster:Int,
 
 
 
+
      /**
      * Evolution of the tAlgorithm is performed through calls to next
      */
      def next():Boolean={
-       for (cluster <- population.listOfClusters)
-       {
-         for (particle <- cluster.particles)
-         {
-           val particleF = pFitness(particle.pNow.getArray())
-           if (particleF > particle.bestFitnessValueNow)
-           {
-
-           }
-         }
-       }
-       throw new IllegalArgumentException()
+       population.algorithmComposition(true)
      }
 
 
