@@ -37,7 +37,7 @@ case class Particle(min: Array[Double], max: Array[Double]) {
 
 
   for (i <- 0 until size) {
-    pNow.set(i, 0, min(i) + rndGen.nextDouble() * (-min(i) + max(i)))
+    pNow.set(i, 0, min(i) + 0.9 * rndGen.nextDouble() * (-min(i) + max(i)))
     pBest.set(i, 0, pNow(i, 0))
   }
 
@@ -178,7 +178,7 @@ class SwarmPop(numberOfCluster: Int, numberOfParticlesPerCluster: Int, minLimit:
               val  newv =
                 particle.velocity * w +
                   (particle.pBest - particle.pNow) * r1 * c1 +
-                  (gBest.pNow - particle.pNow) * r2 * c2 +
+                  (gBest.pBest  - particle.pNow) * r2 * c2 +
                   (cluster.clusterBestParticle.pBest - particle.pNow) * r3 * c3
 
 
