@@ -222,6 +222,17 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
     rMatrix
   }
 
+  def +(b:T1):Matrix[T1]=
+  {
+    val resM = this.clone()
+    var i = 0;
+    while(i<data.length)
+      {
+        resM.data(i)= m.plus(data(i),b)
+        i = i + 1
+      } 
+      resM
+  }
   
   def +(b:Matrix[T1]): Matrix[T1] = {
     require(this.numberCols == b.numberCols && this.numberRows == b.numberRows)
