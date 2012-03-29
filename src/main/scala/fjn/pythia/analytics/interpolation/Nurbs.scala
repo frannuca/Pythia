@@ -1,5 +1,7 @@
 package fjn.pythia.analytics.interpolation
 
+import fjn.pythia.matrix.Matrix
+
 /**
  * Created by IntelliJ IDEA.
  * User: fran
@@ -8,6 +10,14 @@ package fjn.pythia.analytics.interpolation
  * To change this template use File | Settings | File Templates.
  */
 
-class Nurbs {
+class Nurbs(val qk:Array[Matrix[Double]],val basisOrder:Array[Int]) extends controlPoints
+    with parameterVector
+    with BasisFunctionOrder
+    with KnotsVector
+    with Basis{
+
+  //val qk = qkv
+  //val basisOrder:Array[Int]=basisOrder
+
 
 }
