@@ -73,10 +73,15 @@ trait parameterVector {
 
 
 
+    var acc_chord = 0.0d
+    var acc_eq = 0.0d
+    var acc_centrip = 0.0d
+
     for (n <- 1 until parameterKnotsAux(i).length - 1) {
-      parametersKnots_Chord(i)= parametersKnots_Chord(i) ++ Seq((parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) / normLength)
+      parametersKnots_Chord(i)=
+        parametersKnots_Chord(i) ++  Seq(parametersKnots_Chord(i)(n-1) +( parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) / normLength)
       parametersKnots_EquallySpaced(i) = parametersKnots_EquallySpaced(i) ++ Seq(n.toDouble / (parameterKnotsAux(i).length - 1).toDouble)
-      parametersKnots_Centripetal(i) = parametersKnots_Centripetal(i) ++ Seq(math.sqrt(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) ) / sqrt_normLength)
+      parametersKnots_Centripetal(i) = parametersKnots_Centripetal(i) ++ Seq(parametersKnots_Centripetal(i)(n-1)+math.sqrt(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) ) / sqrt_normLength)
     }
 
     parametersKnots_Chord(i)  =
@@ -108,26 +113,26 @@ trait KnotsVector {
 
 
   def computeKnots(params:Array[Seq[Double]]):Array[Seq[Double]]={
-    val knots_ = new Array[Seq[Double]](params.length)
+    val knots_ = (for ( i <- 0 until params.length ) yield Seq[Double]()).toArray
     for (i <- 0 until params.length)
     {
       val p = basisOrder(i)
       val dim = params(i).length
       for (j <- 0 until dim)
       {
-        if( j  <=  p)
+        if( j  <=  p+1)
         {
-          knots_(i) ++ Seq(0.0)
+          knots_(i) = knots_(i) ++ Seq(0.0)
         }
-        if( j  >= (dim - p) )
+        else if( j  >= (dim - p - 1) )
         {
-          knots_(i) ++ Seq(1.0)
+          knots_(i) = knots_(i) ++ Seq(1.0)
         }
         else
         {
-          knots_(i) ++ Seq(
+          knots_(i) = knots_(i) ++ Seq(
           (for (k <- (j-p) until j+1;
-           val v:Double = params(i)(k)
+           val v:Double = params(i)(k)/(p+1.0)
           ) yield v).foldLeft(0.0)((acc,vv)=> acc+vv)
           )
 

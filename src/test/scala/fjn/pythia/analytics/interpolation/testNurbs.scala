@@ -22,23 +22,16 @@ class testNurbs  extends Specification {
 
   
   def `testAlgorithm` ={
-    val qk = new Array[Matrix[Double]](3)
+    val qk =
+      (for(h <- 0 until 21;
+        val mt = new Matrix[Double](2,1)
+      ) yield {mt.zeros;val mt2=mt+h.toDouble; mt2}
+            ).toArray[Matrix[Double]]
     
-    qk(0)=new Matrix[Double](2,1)
-    qk(0).zeros
-   
-    qk(1)=new Matrix[Double](2,1)
-    qk(1).zeros
-    qk(1)=qk(1) + 3
 
 
-    qk(2)=new Matrix[Double](2,1)
-    qk(2).zeros
-    qk(2)=qk(1) + 5
-
-
-    
     val bspline = new Nurbs(qk,Array(2,2))
+    true
   }
 
 }
