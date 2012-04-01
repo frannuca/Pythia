@@ -152,7 +152,8 @@ trait KnotsVector {
 
 trait Basis {
   self:KnotsVector with   BasisFunctionOrder =>
-  private def N(knots:Array[Seq[Double]])(i: Int, p: Int,nCoord:Int)(u: Double): Double = {
+
+   private def N(knots:Array[Seq[Double]])(i: Int, p: Int,nCoord:Int)(u: Double): Double = {
     if (p == 0) {
       if (knots(nCoord)(i) <= u && u < knots(nCoord)(i + 1))
         1.0
@@ -165,5 +166,9 @@ trait Basis {
         (knots(nCoord)(i + p + 1) - u) / (knots(nCoord)(i + p + 1) - knots(nCoord)(i + 1)) * N(knots)(i + 1, p - 1,nCoord)(u)
     }
   }
+
+  def NCentripetal(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knots_Centripetal)(i,p,nCoord)(u)
+  def NChords(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knots_Chords)(i,p,nCoord)(u)
+  def NEquallySpaced(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knots__EquallySpaced)(i,p,nCoord)(u)
 
 }

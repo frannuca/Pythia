@@ -31,6 +31,8 @@ class testNurbs  extends Specification {
 
 
     val bspline = new Nurbs(qk,Array(2,2))
+
+    val r =bspline.NCentripetal(2,2,0)(0.4)
     true
   }
 
