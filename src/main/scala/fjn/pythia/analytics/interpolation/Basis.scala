@@ -120,11 +120,11 @@ trait KnotsVector {
       val dim = params(i).length
       for (j <- 0 until dim)
       {
-        if( j  <=  p+1)
+        if( j  <=  p)
         {
           knots_(i) = knots_(i) ++ Seq(0.0)
         }
-        else if( j  >= (dim - p - 1) )
+        else if( j  > (dim - p - 1) )
         {
           knots_(i) = knots_(i) ++ Seq(1.0)
         }
@@ -161,8 +161,7 @@ trait Basis {
         0.0
     }
     else {
-      (u - knots(nCoord)(i)) / (knots(nCoord)(i + p) -
-        knots(nCoord)(i)) * N(knots)(i, p - 1,nCoord)(u) +
+      (u - knots(nCoord)(i)) / (knots(nCoord)(i + p) - knots(nCoord)(i)) * N(knots)(i, p - 1,nCoord)(u) +
         (knots(nCoord)(i + p + 1) - u) / (knots(nCoord)(i + p + 1) - knots(nCoord)(i + 1)) * N(knots)(i + 1, p - 1,nCoord)(u)
     }
   }
