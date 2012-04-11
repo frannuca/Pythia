@@ -15,6 +15,7 @@ import org.codehaus.jackson.map.ser.BasicSerializerFactory
 
 trait controlPoints {
   val qk: Array[Matrix[Double]]
+  val tqk:Array[Matrix[Double]]
   val dim = qk(0).numberRows
 }
 
@@ -44,22 +45,22 @@ trait parameterVector {
   val parametersKnots_EquallySpaced = (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
   val parametersKnots_Centripetal = (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
 
-  for (i <- 0 until parameterKnotsAux.length) {
+  for (i <- 0 until orderedParameterKnots.length) {
 
 
     //Calculate the sum of the differences between samples per coordinate for the Chord distribution
     //normalization
     val normLength =
-      (for (n <- 1 until parameterKnotsAux(i).length;
-            val d = parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)
+      (for (n <- 1 until orderedParameterKnots(i).length;
+            val d = orderedParameterKnots(i)(n) - orderedParameterKnots(i)(n - 1)
       ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
 
 
     //Calculate the sum of the sqrt differences between samples per coordinate for the Centripetal
     //distribution normalization
     val sqrt_normLength =
-      (for (n <- 1 until parameterKnotsAux(i).length;
-            val d = math.sqrt(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))
+      (for (n <- 1 until orderedParameterKnots(i).length;
+            val d = math.sqrt(orderedParameterKnots(i)(n) - orderedParameterKnots(i)(n - 1))
       ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
 
 
@@ -77,10 +78,10 @@ trait parameterVector {
     var acc_eq = 0.0d
     var acc_centrip = 0.0d
 
-    for (n <- 1 until parameterKnotsAux(i).length - 1) {
+    for (n <- 1 until orderedParameterKnots(i).length - 1) {
       parametersKnots_Chord(i)=
-        parametersKnots_Chord(i) ++  Seq(parametersKnots_Chord(i)(n-1) +( parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) / normLength)
-      parametersKnots_EquallySpaced(i) = parametersKnots_EquallySpaced(i) ++ Seq(n.toDouble / (parameterKnotsAux(i).length - 1).toDouble)
+        parametersKnots_Chord(i) ++  Seq(parametersKnots_Chord(i)(n-1) +( orderedParameterKnots(i)(n) - orderedParameterKnots(i)(n - 1)) / normLength)
+      parametersKnots_EquallySpaced(i) = parametersKnots_EquallySpaced(i) ++ Seq(n.toDouble / (orderedParameterKnots(i).length - 1).toDouble)
       parametersKnots_Centripetal(i) = parametersKnots_Centripetal(i) ++ Seq(parametersKnots_Centripetal(i)(n-1)+math.sqrt(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) ) / sqrt_normLength)
     }
 
@@ -93,6 +94,20 @@ trait parameterVector {
     parametersKnots_Centripetal(i)  =
           parametersKnots_Centripetal(i) ++ Seq(1.0d)
   }
+
+  val tqk =
+  (for (i <- 0 until qk.length) yield {        
+        val q = qk(i).clone()
+        val ar = q.getArray().map(x => {parametersKnots_EquallySpaced(i)(orderedParameterKnots.indexOf(x))})
+
+
+          for (j <- 0 until ar.length)
+          { q.set(j,0,ar(j))};
+
+          q
+          
+      }).toArray[Matrix[Double]]
+
 
   //  def getParameterVector():Array[Matrix[Double]]=
   //  {
@@ -169,5 +184,40 @@ trait Basis {
   def NCentripetal(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knots_Centripetal)(i,p,nCoord)(u)
   def NChords(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knots_Chords)(i,p,nCoord)(u)
   def NEquallySpaced(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knots__EquallySpaced)(i,p,nCoord)(u)
+
+}
+
+trait solver {
+  self: Basis with parameterVector with controlPoints with BasisFunctionOrder=>
+
+  val samples = self.qk.length
+  val pk = new  Array[Matrix[Double]](self.qk.length)
+  val weights = new Array[Double](self.qk.length)
+  def solve()={
+
+
+    
+    val listOfMatrix =
+      for (k <- 0 until dim)
+      yield
+    {
+      val qMatrix = new Matrix[Double](samples,samples)
+      for (i <- 0 until samples)
+      {
+        for (j <- 0 until  samples)
+        {
+          qMatrix.set(i,j, NEquallySpaced(i,basisOrder(i),k)(parametersKnots_EquallySpaced(i)(k)))
+          //(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knots__EquallySpaced)(i,p,nCoord)(u)
+        }
+
+      }
+      qMatrix
+
+    }
+
+  }
+  
+   
+
 
 }

@@ -14,10 +14,9 @@ class Nurbs(val qk:Array[Matrix[Double]],val basisOrder:Array[Int]) extends cont
     with parameterVector
     with BasisFunctionOrder
     with KnotsVector
-    with Basis{
+    with Basis
+    {
 
-  //val qk = qkv
-  //val basisOrder:Array[Int]=basisOrder
 
 
 }
