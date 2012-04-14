@@ -36,11 +36,25 @@ class testMatrix extends Specification {
 //      m.set(1,0,3)
 //      m.set(1,1,5)
 //
-//      val m2 = new Matrix[Complex](2,2)
-//      m2.set(0,0,1)
-//      m2.set(0,1,2)
-//      m2.set(1,0,3)
-//      m2.set(1,1,4)
+      val minv = new Matrix[Double](2,2)
+      minv.zeros
+      minv.set(0,0,1);
+      minv.set(0,1,2)
+      minv.set(1,0,3)
+      minv.set(1,1,4)
+
+      minv.invert();
+      
+      val minv2 = new Matrix[Double](2,2)
+            minv2.zeros
+            minv2.set(0,0,1);
+            minv2.set(0,1,2)
+            minv2.set(1,0,3)
+            minv2.set(1,1,4)
+      
+      val minv3 = minv * minv2;
+      
+
 //
 //      val m3 = m * m2;
 //
@@ -108,6 +122,18 @@ class testMatrix extends Specification {
 
 
 
+      val m2inv = m2.clone()
+      m2inv.invert()
+      val m3 = m2 * m2inv
+
+      for (j <-0 until m3.numberCols)
+         for(i <- 0 until m3.numberRows)
+           if(i != j)
+              require(math.abs (m3(i,j))<1e-5)
+           else
+             require(math.abs (m3(i,j)-1.0)<1e-5)
+
+
 
 
 
@@ -158,6 +184,8 @@ class testMatrix extends Specification {
               ii = ii + 1
 
       }
+
+
 
 
       true

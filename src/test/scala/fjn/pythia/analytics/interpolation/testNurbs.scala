@@ -32,15 +32,16 @@ class testNurbs  extends Specification {
   
   def `testAlgorithm` ={
     val qk =
-      (for(h <- 0 until 20;
+      (for(h <- 0 until 7;
         val mt = new Matrix[Double](2,1)
       ) yield {mt.zeros;val mt2=mt+h.toDouble; mt2}
             ).toArray[Matrix[Double]]
     
 
 
-    val order = 4
+    val order = 1
     val bspline = new Nurbs(qk,Array(order,order))
+    bspline.solve();
 
 
 

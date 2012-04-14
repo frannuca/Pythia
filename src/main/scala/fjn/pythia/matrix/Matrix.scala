@@ -5,9 +5,9 @@ import scala.Array
 import akka.actor.Actor
 import akka.actor.Actor.{actorOf}
 import akka.event.EventHandler
-import java.util.ArrayList
 import akka.dispatch.Future
-
+import com.sun.jna.Native
+import java.util.{HashMap, ArrayList}
 
 
 /**
@@ -22,12 +22,18 @@ import Complex._
 object MatrixConstants {
   var numberOfCores: Int = 1
 
+
+
+
+
 };
 
 
 class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCoresv: Int = -1)(implicit m2: Manifest[T1], implicit val m: Fractional[T1]){
 
   outer =>
+
+
 
   type DataType = T1
   private var numberOfCores = MatrixConstants.numberOfCores
@@ -155,7 +161,7 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
     val rArr= new Array[T1](this.numberCols)
     while(counter<this.numberCols)
     {
-     rArr(counter) = data(start+step*counter)
+     rArr(counter) =  data(start+step*counter)
       counter = counter + 1
     }
     rArr
@@ -396,4 +402,11 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
     rStr.toString()
 
   }
+  
+  def invert():Unit={
+      import MatrixConstants._
+      MatrixInterface.invert(data.asInstanceOf[Array[Double]],this.numberCols)
+  
+    }
 }
+
