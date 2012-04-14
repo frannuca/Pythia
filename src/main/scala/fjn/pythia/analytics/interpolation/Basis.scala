@@ -96,15 +96,19 @@ trait parameterVector {
   }
 
   val tqk =
-  (for (i <- 0 until qk.length) yield {        
+  (for (i <- 0 until qk.length) yield {
         val q = qk(i).clone()
-        val ar = q.getArray().map(x => {parametersKnots_EquallySpaced(i)(orderedParameterKnots.indexOf(x))})
+    
+    for (j <- 0 until dim)
+    {
+      val index = orderedParameterKnots(j).indexOf(qk(i)(j,0))
+      val tx = parametersKnots_EquallySpaced(j)(index)
 
+      q.set(j,0,tx)
 
-          for (j <- 0 until ar.length)
-          { q.set(j,0,ar(j))};
+    }
 
-          q
+     q
           
       }).toArray[Matrix[Double]]
 
@@ -133,27 +137,23 @@ trait KnotsVector {
     {
       val p = basisOrder(i)
       val dim = params(i).length
-      for (j <- 0 until dim)
+      for (j <- 0 until p+1)
       {
-        if( j  <=  p)
-        {
-          knots_(i) = knots_(i) ++ Seq(0.0)
-        }
-        else if( j  > (dim - p - 1) )
-        {
-          knots_(i) = knots_(i) ++ Seq(1.0)
-        }
-        else
-        {
-          knots_(i) = knots_(i) ++ Seq(
-          (for (k <- (j-p) until j+1;
-           val v:Double = params(i)(k)/(p+1.0)
-          ) yield v).foldLeft(0.0)((acc,vv)=> acc+vv)
-          )
+        knots_(i) = knots_(i) ++ Seq(0.0)
+      }
+      for (j <- p+1 until dim)
+      {
+        knots_(i) = knots_(i) ++ Seq(
+                  (for (k <- (j-p) until j+1;
+                   val v:Double = params(i)(k)/(p+1.0)
+                  ) yield v).foldLeft(0.0)((acc,vv)=> acc+vv)
+                  )
 
-        }
+      }
 
-
+      for (j <- 0 until p+1)
+      {
+        knots_(i) = knots_(i) ++ Seq(1.0)
       }
     }
     knots_
@@ -176,8 +176,19 @@ trait Basis {
         0.0
     }
     else {
-      (u - knots(nCoord)(i)) / (knots(nCoord)(i + p) - knots(nCoord)(i)) * N(knots)(i, p - 1,nCoord)(u) +
-        (knots(nCoord)(i + p + 1) - u) / (knots(nCoord)(i + p + 1) - knots(nCoord)(i + 1)) * N(knots)(i + 1, p - 1,nCoord)(u)
+      val denom1 = (knots(nCoord)(i + p) - knots(nCoord)(i));
+      val denom2 =  (knots(nCoord)(i + p + 1) - knots(nCoord)(i + 1))
+      val comp1 =
+        if(denom1!=0){
+        (u - knots(nCoord)(i)) / denom1 * N(knots)(i, p - 1,nCoord)(u)
+      }
+      else 0
+      val comp2 = if(denom2!=0) {
+        (knots(nCoord)(i + p + 1) - u) / denom2 * N(knots)(i + 1, p - 1,nCoord)(u)
+      }
+      else 0
+
+      comp1+comp2
     }
   }
 
@@ -206,14 +217,41 @@ trait solver {
       {
         for (j <- 0 until  samples)
         {
-          qMatrix.set(i,j, NEquallySpaced(i,basisOrder(i),k)(parametersKnots_EquallySpaced(i)(k)))
-          //(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knots__EquallySpaced)(i,p,nCoord)(u)
+          if (i==15)
+          {
+            val a = 11;
+          }
+          val kaux = k
+          val iaux = i
+          val jaux = j
+          val paux =   basisOrder(k)
+          val vv = NEquallySpaced(j,basisOrder(k),k)(tqk(i)(k,0))
+          qMatrix.set(i,j,vv )
         }
 
       }
       qMatrix
 
     }
+
+    var rightM = new Matrix[Double](samples,dim+1)
+    for(i <- 0 until samples)
+    {
+      for(j <- 0 until dim)
+      rightM.set(i,j,tqk(i)(j,0))
+
+      rightM.set(i,dim,2.5)
+    }
+
+    var mSol = new Matrix[Double](samples,dim+1)
+    //computing the contol points:
+    for (m <- listOfMatrix)
+    {
+      m.invert()
+      rightM = m * rightM
+    }
+
+    val P = rightM
 
   }
   
