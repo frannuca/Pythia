@@ -32,16 +32,19 @@ class testNurbs  extends Specification {
   
   def `testAlgorithm` ={
     val qk =
-      (for(h <- 0 until 7;
-        val mt = new Matrix[Double](2,1)
+      (for(h <- 0 until 8;
+        val mt = new Matrix[Double](1,1)
       ) yield {mt.zeros;val mt2=mt+h.toDouble; mt2}
             ).toArray[Matrix[Double]]
     
 
 
-    val order = 1
+    val z =(for(h <- 0 until 8;
+            val r = math.cos(h.toDouble/8.0*3.1415*2.0)* math.cos(h.toDouble/8.0*3.1415*2.0)) yield r).toArray[Double]
+
+    val order = 3
     val bspline = new Nurbs(qk,Array(order,order))
-    bspline.solve();
+    bspline.solve(z);
 
 
 
@@ -52,10 +55,12 @@ class testNurbs  extends Specification {
     ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
 
     {
-      for(i<- 0 until 1000)
+      for(i<- 0 until 1001)
           {
-            xtotal.last.add(1.0/1000.0 * i.toDouble)
-            ytotal.last.add(bspline.NCentripetal(6,order,1)(xtotal.last(i)))
+            val t = 1.0/1000.0 * i.toDouble
+            val ax = bspline(t)
+            xtotal.last.add(ax(0,0))
+            ytotal.last.add(ax(1,0))
 
           }
 

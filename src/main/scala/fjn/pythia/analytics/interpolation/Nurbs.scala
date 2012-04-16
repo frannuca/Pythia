@@ -2,6 +2,8 @@ package fjn.pythia.analytics.interpolation
 
 import fjn.pythia.matrix.Matrix
 
+
+
 /**
  * Created by IntelliJ IDEA.
  * User: fran
@@ -19,5 +21,18 @@ class Nurbs(val qk:Array[Matrix[Double]],val basisOrder:Array[Int]) extends cont
     {
 
 
+  def  apply(t:Double):Matrix[Double] ={
+
+      var sum = new Matrix[Double](2,1)
+      for (i <- 0 until samples)
+      {
+        val pAux = new Matrix[Double](2,1);
+        pAux.set(0,0,pk(i,0))
+        pAux.set(1,0,pk(i,1))
+        sum = sum +    pAux* NEquallySpaced (i,basisOrder(0),0)(t)
+      }
+
+    sum
+  }
 
 }
