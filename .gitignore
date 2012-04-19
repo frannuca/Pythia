@@ -1,8 +1,6 @@
 
 /.idea
-/project/boot
-/project/target
-/project/boot
+/.idea_modules
+/target
 /project/target
 /project/plugins/target
-/target
