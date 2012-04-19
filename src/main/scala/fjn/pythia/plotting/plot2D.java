@@ -33,8 +33,9 @@ public class plot2D extends JPanel {
 
     }
 
+    XYSeriesCollection dataset = new XYSeriesCollection();
 
-    public void Show(ArrayList<Double> x, ArrayList<Double> y, String title) {
+    public void AddCurve(ArrayList<Double> x, ArrayList<Double> y, String title) {
         xySeries = new XYSeries(title);
         if (x.size() != y.size()) {
             throw new ExceptionInInitializerError("size of x and y differs");
@@ -45,29 +46,34 @@ public class plot2D extends JPanel {
             xySeries.add(x.get(n), y.get(n));
         }
 
-        XYSeriesCollection dataset = new XYSeriesCollection();
+
         dataset.addSeries(xySeries);
 
-        JFreeChart chart = ChartFactory.createXYLineChart("xy plot", "normalize coord", "basis", dataset, PlotOrientation.VERTICAL, true, true, false);
-
-        XYPlot plot = (XYPlot) chart.getPlot();
-        plot.setDomainGridlineStroke(new BasicStroke(1));
-
-        ChartPanel chartPanel = new ChartPanel(chart);
-
-        add(chartPanel);
-
-        JFrame frame = new JFrame("Chart One");
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.getContentPane().add(this, BorderLayout.CENTER);
-        frame.pack();
-        frame.setVisible(true);
 
 
     }
 
+    public void showPanel()
+    {
+
+        JFreeChart chart = ChartFactory.createXYLineChart("xy plot", "normalize coord", "basis", dataset, PlotOrientation.VERTICAL, true, true, false);
+
+                XYPlot plot = (XYPlot) chart.getPlot();
+                plot.setDomainGridlineStroke(new BasicStroke(1));
+
+                ChartPanel chartPanel = new ChartPanel(chart);
+
+                add(chartPanel);
+
+                JFrame frame = new JFrame("Chart One");
+
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                frame.getContentPane().add(this, BorderLayout.CENTER);
+                frame.pack();
+                frame.setVisible(true);
+
+    }
     private XYSeries xySeries = null;
 
 }

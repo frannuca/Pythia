@@ -31,17 +31,22 @@ class testNurbs  extends Specification {
 
   
   def `testAlgorithm` ={
+
+    val nSamples= 10
     val qk =
-      (for(h <- 0 until 7;
-        val mt = new Matrix[Double](2,1)
-      ) yield {mt.zeros;val mt2=mt+h.toDouble; mt2}
+      (for(h <- 0 until nSamples;
+        val mt = new Matrix[Double](1,1)
+      ) yield {mt.zeros;val mt2=mt+(h.toDouble/8.0*3.1415*2.0); mt2}
             ).toArray[Matrix[Double]]
     
 
 
-    val order = 1
+    val z =(for(h <- 0 until nSamples;
+            val r = math.pow ( math.cos(h.toDouble/8.0*3.1415*2.0),1)) yield r).toArray[Double]
+
+    val order = 2
     val bspline = new Nurbs(qk,Array(order,order))
-    bspline.solve();
+    bspline.solve(z);
 
 
 
@@ -52,22 +57,53 @@ class testNurbs  extends Specification {
     ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
 
     {
-      for(i<- 0 until 1000)
+      for(i<- 0 until  1000)
           {
-            xtotal.last.add(1.0/1000.0 * i.toDouble)
-            ytotal.last.add(bspline.NCentripetal(6,order,1)(xtotal.last(i)))
+            val t = 1.0/ 1000.toDouble * i.toDouble
+            val ax = bspline(t)
+            //ax.set(1,0,z(i))
+            
+            xtotal.last.add(ax(0,0))
+            ytotal.last.add(ax(1,0))
 
           }
 
     }
 
+        xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+        ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+
+      //for(nf <- 0 until 5)
+        {
+          val nf = 0
+          xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+          ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+
+          for(i<- 0 until  1000)
+              {
+                val t = 1.0/ 1000.toDouble * i.toDouble
+                val ax = bspline.NCentripetal(nf,order,0)(t)
+                //ax.set(1,0,z(i))
+
+                xtotal.last.add(t)
+                ytotal.last.add(ax)
+
+              }
+
+        }
+
+
+    val axtest = bspline(1.0)
 
     for (i <- 0 until xtotal.length)
     {
+      val p = new plot2D()
+      p.AddCurve(xtotal(i),ytotal(i),i.toString);
       val fut =
         Future
-              {  val p = new plot2D();
-                 p.Show(xtotal(i),ytotal(i),i.toString);
+              {
+                p.showPanel()
+
               }
 
     }

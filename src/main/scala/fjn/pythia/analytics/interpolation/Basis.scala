@@ -141,11 +141,12 @@ trait KnotsVector {
       {
         knots_(i) = knots_(i) ++ Seq(0.0)
       }
-      for (j <- p+1 until dim)
+      for (jaux <- 0 until dim-p)
       {
+        val j = jaux+p+1
         knots_(i) = knots_(i) ++ Seq(
-                  (for (k <- (j-p) until j+1;
-                   val v:Double = params(i)(k)/(p+1.0)
+                  (for (k <- j-p until j;
+                   val v:Double = params(i)(k)/(p)
                   ) yield v).foldLeft(0.0)((acc,vv)=> acc+vv)
                   )
 
@@ -170,7 +171,7 @@ trait Basis {
 
    private def N(knots:Array[Seq[Double]])(i: Int, p: Int,nCoord:Int)(u: Double): Double = {
     if (p == 0) {
-      if (knots(nCoord)(i) <= u && u < knots(nCoord)(i + 1))
+      if (knots(nCoord)(i) <= u && u <= knots(nCoord)(i + 1))
         1.0
       else
         0.0
@@ -202,9 +203,9 @@ trait solver {
   self: Basis with parameterVector with controlPoints with BasisFunctionOrder=>
 
   val samples = self.qk.length
-  val pk = new  Array[Matrix[Double]](self.qk.length)
+  var pk = new Matrix[Double](1,1)
   val weights = new Array[Double](self.qk.length)
-  def solve()={
+  def solve(z:Array[Double])={
 
 
     
@@ -217,10 +218,6 @@ trait solver {
       {
         for (j <- 0 until  samples)
         {
-          if (i==15)
-          {
-            val a = 11;
-          }
           val kaux = k
           val iaux = i
           val jaux = j
@@ -240,7 +237,7 @@ trait solver {
       for(j <- 0 until dim)
       rightM.set(i,j,tqk(i)(j,0))
 
-      rightM.set(i,dim,2.5)
+      rightM.set(i,dim,z(i))
     }
 
     var mSol = new Matrix[Double](samples,dim+1)
@@ -251,11 +248,14 @@ trait solver {
       rightM = m * rightM
     }
 
-    val P = rightM
+   pk = rightM
 
   }
   
    
 
 
+
 }
+
+
