@@ -141,11 +141,12 @@ trait KnotsVector {
       {
         knots_(i) = knots_(i) ++ Seq(0.0)
       }
-      for (j <- p+1 until dim)
+      for (jaux <- 0 until dim-p)
       {
+        val j = jaux+p+1
         knots_(i) = knots_(i) ++ Seq(
-                  (for (k <- (j-p) until j+1;
-                   val v:Double = params(i)(k)/(p+1.0)
+                  (for (k <- j-p until j;
+                   val v:Double = params(i)(k)/(p)
                   ) yield v).foldLeft(0.0)((acc,vv)=> acc+vv)
                   )
 
@@ -217,10 +218,6 @@ trait solver {
       {
         for (j <- 0 until  samples)
         {
-          if (i==15)
-          {
-            val a = 11;
-          }
           val kaux = k
           val iaux = i
           val jaux = j
