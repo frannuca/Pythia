@@ -1,6 +1,6 @@
-import com.github.retronym.SbtOneJar
 import sbt._
 import Keys._
+import com.github.retronym.SbtOneJar
 
 object BuildSettings {
   val buildOrganization = "fjn"
