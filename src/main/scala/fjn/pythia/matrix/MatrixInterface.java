@@ -10,7 +10,7 @@ import com.sun.jna.Native;
  * To change this template use File | Settings | File Templates.
  */
 public class MatrixInterface {
-   static final JNAOps lib = (JNAOps)Native.loadLibrary("C:\\code\\scala\\Pythia\\win32\\fjnMatrix.dll", JNAOps.class);
+   static final JNAOps lib = (JNAOps)Native.loadLibrary("D:\\code\\scala\\Pythia\\win32\\fjnMatrix.dll", JNAOps.class);
     static public void invert(double [] data,int dim)
     {
         lib.invD(data,dim);

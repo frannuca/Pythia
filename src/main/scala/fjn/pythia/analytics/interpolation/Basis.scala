@@ -141,12 +141,12 @@ trait KnotsVector {
       {
         knots_(i) = knots_(i) ++ Seq(0.0)
       }
-      for (jaux <- 0 until dim-p)
+      for (jaux <- 1 to dim-p-1)
       {
-        val j = jaux+p+1
+        val j = jaux+p
         knots_(i) = knots_(i) ++ Seq(
-                  (for (k <- j-p until j;
-                   val v:Double = params(i)(k)/(p)
+                  (for (k <- j-p to j;
+                   val v:Double = params(i)(k)/(p+1)
                   ) yield v).foldLeft(0.0)((acc,vv)=> acc+vv)
                   )
 
@@ -171,7 +171,10 @@ trait Basis {
 
    private def N(knots:Array[Seq[Double]])(i: Int, p: Int,nCoord:Int)(u: Double): Double = {
     if (p == 0) {
-      if (knots(nCoord)(i) <= u && u <= knots(nCoord)(i + 1))
+
+      if (knots(nCoord)(i) <= u && u < knots(nCoord)(i + 1))
+        1.0
+      else if( knots(nCoord)(i + 1) == 1 && u==1)
         1.0
       else
         0.0
@@ -179,17 +182,25 @@ trait Basis {
     else {
       val denom1 = (knots(nCoord)(i + p) - knots(nCoord)(i));
       val denom2 =  (knots(nCoord)(i + p + 1) - knots(nCoord)(i + 1))
+      val num1 =  (u - knots(nCoord)(i))
+      val num2 =   (knots(nCoord)(i + p + 1) - u)
       val comp1 =
-        if(denom1!=0){
-        (u - knots(nCoord)(i)) / denom1 * N(knots)(i, p - 1,nCoord)(u)
+        if(math.abs(denom1)>1e-6){
+        num1 / denom1 * N(knots)(i, p - 1,nCoord)(u)
       }
       else 0
-      val comp2 = if(denom2!=0) {
-        (knots(nCoord)(i + p + 1) - u) / denom2 * N(knots)(i + 1, p - 1,nCoord)(u)
+      val comp2 = if(math.abs(denom2)>1e-6) {
+        num2 / denom2 * N(knots)(i + 1, p - 1,nCoord)(u)
       }
       else 0
 
-      comp1+comp2
+      val auxx = comp1+comp2
+      if(p==2 && i == 1 && u==0.375)
+      {
+        val a="stop"
+      }
+
+      auxx
     }
   }
 
@@ -224,6 +235,7 @@ trait solver {
           val paux =   basisOrder(k)
           val vv = NEquallySpaced(j,basisOrder(k),k)(tqk(i)(k,0))
           qMatrix.set(i,j,vv )
+
         }
 
       }
