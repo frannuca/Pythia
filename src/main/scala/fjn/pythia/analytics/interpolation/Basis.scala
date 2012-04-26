@@ -1,8 +1,6 @@
 package fjn.pythia.analytics.interpolation
 
 import fjn.pythia.matrix.Matrix
-import java.util.ArrayList
-import org.codehaus.jackson.map.ser.BasicSerializerFactory
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,12 +11,34 @@ import org.codehaus.jackson.map.ser.BasicSerializerFactory
  */
 
 
+/**The user must provide an array of samples points which the algorithm 
+ uses as control points.
+ The presentatin of the control points is performed as a lineal array of points plus
+ a list of dimensions. Typically if our points are part of a rectangular grid
+ the we need to provide an array such as [q00,q01,q02,...,q0(n-1),q10,...q1(n-1),...,q(m-1)0,..,q(m-1)(n-1)]
+ */
+
 trait controlPoints {
-  val qk: Array[Matrix[Double]]
-  val tqk:Array[Matrix[Double]]
-  val dim = qk(0).numberRows
+  ///Matrix of points to be interpolated, only in matrix form we
+  ///can perform the 2-dimensional interpolation.
+  ///the algorithm expects a list of number of samples per dimension
+  ///The array of sample in dimension dk is extracted as follows:
+  // item(i,j)=qk(j*dim_i+i)
+  val qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
+  protected val tqk:Array[Matrix[Double]] //list of transformed control point in the target NURBS space
+  val dim:Seq[Int] /// list of dimension composing our grid
+  
+  def apply(w:Seq[Int]):Matrix[Double]=
+  {
+     var index=0
+     val partial_dim_products = dim.foldRight(1.0)((acc,x)=>acc*x)
+  }
 }
 
+
+/**
+ * This trait computes the location of the control points into the target nurbs space
+ */
 trait parameterVector {
   self: controlPoints =>
 
@@ -29,12 +49,17 @@ trait parameterVector {
 
 
   //Find the list of points per coordinate:
-  for (i <- 0 until self.qk.length) {
-    for (n <- 0 until self.qk(i).numberRows) {
-      parameterKnotsAux(n) = parameterKnotsAux(n) ++ Seq(self.qk(i)(n, 0))
-    }
-
+  var offset = 0
+  for (sz <- self.dim)
+  {
+    for (i <- offset until offset+sz) {
+        for (n <- 0 until self.qk(i).numberRows) {
+          parameterKnotsAux(n) = parameterKnotsAux(n) ++ Seq(self.qk(i)(n, 0))
+        }
+    
+      }  
   }
+  
 
   //this other Array hosts the list of location per axis but ordered
   private val orderedParameterKnots = parameterKnotsAux.map(s => s.sortWith((a, b) => a < b))

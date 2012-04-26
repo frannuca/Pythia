@@ -45,7 +45,7 @@ class testNurbs  extends Specification {
     val z =(for(h <- 0 until nSamples;
             val r = math.cos(h.toDouble/nSamples.toDouble*3.1415*20.0)*math.exp(-h.toDouble/nSamples)) yield r).toArray[Double]
 
-      val order =3
+    val order =5
     val bspline = new Nurbs(qk,Array(order,order))
     bspline.solve(z);
 
