@@ -59,24 +59,24 @@ class testNurbs  extends Specification {
 
 
 
-//      for(nf <- 0 until nSamples )
-//        {
-//
-//          xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
-//          ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
-//
-//          for(i<- 0 until  1001)
-//              {
-//                val t = 1.0/ 1000.toDouble * i.toDouble
-//                val ax = bspline.NCentripetal(nf,order,0)(t)
-//                //ax.set(1,0,z(i))
-//
-//                xtotal.last.add(t)
-//                ytotal.last.add(ax)
-//
-//              }
-//
-//        }
+      for(nf <- 0 until nSamples )
+        {
+
+          xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+          ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+
+          for(i<- 0 until  1001)
+              {
+                val t = 1.0/ 1000.toDouble * i.toDouble
+                val ax = bspline.NCentripetal(nf,order,0)(t)
+                //ax.set(1,0,z(i))
+
+                xtotal.last.add(t)
+                ytotal.last.add(ax)
+
+              }
+
+        }
     xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
     ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
 
