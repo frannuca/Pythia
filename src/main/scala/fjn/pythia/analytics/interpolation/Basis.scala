@@ -17,7 +17,6 @@ import fjn.pythia.matrix.Matrix
  a list of dimensions. Typically if our points are part of a rectangular grid
  the we need to provide an array such as [q00,q01,q02,...,q0(n-1),q10,...q1(n-1),...,q(m-1)0,..,q(m-1)(n-1)]
  */
-
 trait controlPoints {
   ///Matrix of points to be interpolated, only in matrix form we
   ///can perform the 2-dimensional interpolation.
@@ -27,11 +26,11 @@ trait controlPoints {
   val qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
   protected val tqk:Array[Matrix[Double]] //list of transformed control point in the target NURBS space
   val dim:Seq[Int] /// list of dimension composing our grid
+  val viewer = new MultiArrayView[Matrix[Double]](qk,dim)
   
   def apply(w:Seq[Int]):Matrix[Double]=
   {
-     var index=0
-     val partial_dim_products = dim.foldRight(1.0)((acc,x)=>acc*x)
+     viewer(w)
   }
 }
 
@@ -42,17 +41,19 @@ trait controlPoints {
 trait parameterVector {
   self: controlPoints =>
 
-  //We define the parameter knot location as an array of array of points
-  //marking the position of each axis:
+  //Extracting the positions of each axis:
   private val parameterKnotsAux = 
     (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
 
 
   //Find the list of points per coordinate:
-  var offset = 0
-  for (sz <- self.dim)
+  for ( (sz,dimension) <- (self.dim zip (0 until self.dim.length)) )
   {
-    for (i <- offset until offset+sz) {
+    val xcoord=
+    for (n <- 0 until sz) yield self( (for( k<- 0 until dimension) yield 0).toList::List(n)::(for( k<- dimension+1 until self.dim.length) yield 0).toSeq[Int])
+    
+    
+    for (i <- 0 until sz) {
         for (n <- 0 until self.qk(i).numberRows) {
           parameterKnotsAux(n) = parameterKnotsAux(n) ++ Seq(self.qk(i)(n, 0))
         }
