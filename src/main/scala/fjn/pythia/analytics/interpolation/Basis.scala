@@ -19,74 +19,80 @@ import fjn.pythia.matrix.Matrix
  */
 trait controlPoints {
   ///Matrix of points to be interpolated, only in matrix form we
-  ///can perform the 2-dimensional interpolation.
+  ///can perform the n-dimensional interpolation.
   ///the algorithm expects a list of number of samples per dimension
   ///The array of sample in dimension dk is extracted as follows:
   // item(i,j)=qk(j*dim_i+i)
-  val qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
+  val qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement  
   protected val tqk:Array[Matrix[Double]] //list of transformed control point in the target NURBS space
-  val dim:Seq[Int] /// list of dimension composing our grid
-  val viewer = new MultiArrayView[Matrix[Double]](qk,dim)
+  val nGridSamples:Seq[Int] /// list of points per dimension composing our grid
+  val viewer = new MultiArrayView[Matrix[Double]](qk,nGridSamples)
   
   def apply(w:Seq[Int]):Matrix[Double]=
   {
      viewer(w)
   }
 }
-
-
 /**
  * This trait computes the location of the control points into the target nurbs space
  */
 trait parameterVector {
   self: controlPoints =>
 
-  //Extracting the positions of each axis:
+  //Extracting the positions for each axis:
   private val parameterKnotsAux = 
-    (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
+    (for ( i <- 0 until self.nGridSamples.length ) yield Seq[Double]()).toArray
 
 
   //Find the list of points per coordinate:
-  for ( (sz,dimension) <- (self.dim zip (0 until self.dim.length)) )
+  for ( (sz,dimension) <- (self.nGridSamples zip (0 until self.nGridSamples.length)) )
   {
     val xcoord=
-    for (n <- 0 until sz) yield self( (for( k<- 0 until dimension) yield 0).toList::List(n)::(for( k<- dimension+1 until self.dim.length) yield 0).toSeq[Int])
-    
-    
-    for (i <- 0 until sz) {
-        for (n <- 0 until self.qk(i).numberRows) {
-          parameterKnotsAux(n) = parameterKnotsAux(n) ++ Seq(self.qk(i)(n, 0))
+    (for (n <- 0 until sz)
+      yield
+        {               
+         ((for( k <- 0 until dimension) yield 0).toList)++List(n)++((for( k <- dimension+1 until self.nGridSamples.length) yield 0).toSeq)
         }
+      ).toArray[Seq[Int]]
     
+    
+    
+    for (coord <- xcoord) {
+        val qaux = self(coord)
+        parameterKnotsAux(dimension) = parameterKnotsAux(dimension) ++ Seq(qaux(dimension, 0))
       }  
   }
-  
-
-  //this other Array hosts the list of location per axis but ordered
-  private val orderedParameterKnots = parameterKnotsAux.map(s => s.sortWith((a, b) => a < b))
-
+  //TODO: calculate tqk, the vector of transformed control point in the target space
+//   for (k <- 0 until qk.length)
+//   {
+//    for (d <- viewer.sliceDimensions)
+//     yield
+//     {
+//      k%d
+//     }
+//   }
   //Calculating the final parameter knots associated to the sequence of points qk
   // with the Chord method
-  val parametersKnots_Chord = (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
-  val parametersKnots_EquallySpaced = (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
-  val parametersKnots_Centripetal = (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
+  val parametersKnots_Chord = (for ( i <- 0 until parameterKnotsAux.length ) yield Seq[Double]()).toArray
+  val parametersKnots_EquallySpaced = (for ( i <- 0 until parameterKnotsAux.length ) yield Seq[Double]()).toArray
+  val parametersKnots_Centripetal = (for ( i <- 0 until parameterKnotsAux.length ) yield Seq[Double]()).toArray
 
-  for (i <- 0 until orderedParameterKnots.length) {
+  for (i <- 0 until parameterKnotsAux.length) {
 
 
     //Calculate the sum of the differences between samples per coordinate for the Chord distribution
     //normalization
     val normLength =
-      (for (n <- 1 until orderedParameterKnots(i).length;
-            val d = orderedParameterKnots(i)(n) - orderedParameterKnots(i)(n - 1)
-      ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
+      (for (n <- 1 until parameterKnotsAux(i).length;
+            val d = parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) yield d)
+        .toList.foldLeft(0.0)((acc, v) => acc + v)
 
 
     //Calculate the sum of the sqrt differences between samples per coordinate for the Centripetal
     //distribution normalization
     val sqrt_normLength =
-      (for (n <- 1 until orderedParameterKnots(i).length;
-            val d = math.sqrt(orderedParameterKnots(i)(n) - orderedParameterKnots(i)(n - 1))
+      (for (n <- 1 until parameterKnotsAux(i).length;
+            val d = math.sqrt(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))
       ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
 
 
@@ -104,10 +110,10 @@ trait parameterVector {
     var acc_eq = 0.0d
     var acc_centrip = 0.0d
 
-    for (n <- 1 until orderedParameterKnots(i).length - 1) {
+    for (n <- 1 until parameterKnotsAux(i).length - 1) {
       parametersKnots_Chord(i)=
-        parametersKnots_Chord(i) ++  Seq(parametersKnots_Chord(i)(n-1) +( orderedParameterKnots(i)(n) - orderedParameterKnots(i)(n - 1)) / normLength)
-      parametersKnots_EquallySpaced(i) = parametersKnots_EquallySpaced(i) ++ Seq(n.toDouble / (orderedParameterKnots(i).length - 1).toDouble)
+        parametersKnots_Chord(i) ++  Seq(parametersKnots_Chord(i)(n-1) +( parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) / normLength)
+      parametersKnots_EquallySpaced(i) = parametersKnots_EquallySpaced(i) ++ Seq(n.toDouble / (parameterKnotsAux(i).length - 1).toDouble)
       parametersKnots_Centripetal(i) = parametersKnots_Centripetal(i) ++ Seq(parametersKnots_Centripetal(i)(n-1)+math.sqrt(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)) ) / sqrt_normLength)
     }
 
@@ -121,40 +127,16 @@ trait parameterVector {
           parametersKnots_Centripetal(i) ++ Seq(1.0d)
   }
 
-  val tqk =
-  (for (i <- 0 until qk.length) yield {
-        val q = qk(i).clone()
-    
-    for (j <- 0 until dim)
-    {
-      val index = orderedParameterKnots(j).indexOf(qk(i)(j,0))
-      val tx = parametersKnots_EquallySpaced(j)(index)
 
-      q.set(j,0,tx)
-
-    }
-
-     q
-          
-      }).toArray[Matrix[Double]]
-
-
-  //  def getParameterVector():Array[Matrix[Double]]=
-  //  {
-  //    orderedParameterKnots.foreach()
-  //  }
 }
 
 trait BasisFunctionOrder
 {
   val basisOrder:Array[Int]
 }
+
 trait KnotsVector {
   self:parameterVector with BasisFunctionOrder=>
-
-
-
-
 
 
   def computeKnots(params:Array[Seq[Double]]):Array[Seq[Double]]={
@@ -247,7 +229,7 @@ trait solver {
 
     
     val listOfMatrix =
-      for (k <- 0 until dim)
+      for (k <- 0 until nGridSamples.length)
       yield
     {
       val qMatrix = new Matrix[Double](samples,samples)
@@ -259,7 +241,8 @@ trait solver {
           val iaux = i
           val jaux = j
           val paux =   basisOrder(k)
-          val vv = NEquallySpaced(j,basisOrder(k),k)(tqk(i)(k,0))
+          //TODO:
+          val vv = 0.0// NEquallySpaced(j,basisOrder(k),k)(tqk(i)(k,0))
           qMatrix.set(i,j,vv )
 
         }
@@ -269,16 +252,16 @@ trait solver {
 
     }
 
-    var rightM = new Matrix[Double](samples,dim+1)
+    var rightM = new Matrix[Double](samples,nGridSamples+1)
     for(i <- 0 until samples)
     {
-      for(j <- 0 until dim)
+      for(j <- 0 until nGridSamples)
       rightM.set(i,j,tqk(i)(j,0))
 
-      rightM.set(i,dim,z(i))
+      rightM.set(i,nGridSamples,z(i))
     }
 
-    var mSol = new Matrix[Double](samples,dim+1)
+    var mSol = new Matrix[Double](samples,nGridSamples+1)
     //computing the contol points:
     for (m <- listOfMatrix)
     {
