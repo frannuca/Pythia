@@ -8,6 +8,8 @@ package fjn.pythia.analytics.interpolation
  * To change this template use File | Settings | File Templates.
  */
 
+
+
 class MultiArrayView[T](storage:Seq[T],dimensions:Seq[Int]) {
 
   def apply(index:Seq[Int]):T=
@@ -23,6 +25,27 @@ class MultiArrayView[T](storage:Seq[T],dimensions:Seq[Int]) {
 
     }
     storage(index)
+  }
+
+}
+
+object MultiArrayView{
+  def main(args: Array[String]) {
+    val sq = (0 until 9).toSeq[Double]
+    val dim = List(3,3)
+
+    val mvw = new MultiArrayView(sq,dim)
+
+    for(i <- 0 until dim(0))
+    {
+      for(j<- 0 until dim(1))
+      {
+        val a = mvw(Seq(i,j))
+        val index = mvw
+      }
+    }
+
+
   }
 
 }

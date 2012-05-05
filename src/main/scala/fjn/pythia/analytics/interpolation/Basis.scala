@@ -25,8 +25,8 @@ trait controlPoints {
   // item(i,j)=qk(j*dim_i+i)
   val qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
   protected val tqk:Array[Matrix[Double]] //list of transformed control point in the target NURBS space
-  val dim:Seq[Int] /// list of dimension composing our grid
-  val viewer = new MultiArrayView[Matrix[Double]](qk,dim)
+  val nGridDim:Seq[Int] /// list of dimension composing our grid
+  val viewer = new MultiArrayView[Matrix[Double]](qk,nGridDim)
   
   def apply(w:Seq[Int]):Matrix[Double]=
   {
@@ -41,24 +41,24 @@ trait controlPoints {
 trait parameterVector {
   self: controlPoints =>
 
-  //Extracting the positions of each axis:
+  //Extracting the positions of each axis.. this variable is meant host the list of points per axis in the interpolation
+  //grid
   private val parameterKnotsAux = 
-    (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
+    (for ( i <- 0 until self.nGridDim.length ) yield Seq[Double]()).toArray
 
 
   //Find the list of points per coordinate:
-  for ( (sz,dimension) <- (self.dim zip (0 until self.dim.length)) )
+  for ( (sz,nGridDimension) <- (self.nGridDim zip (0 until self.nGridDim.length)) )
   {
     val xcoord=
-    for (n <- 0 until sz) yield self( (for( k<- 0 until dimension) yield 0).toList::List(n)::(for( k<- dimension+1 until self.dim.length) yield 0).toSeq[Int])
+      for (n <- 0 until sz) yield self( (for( k <- 0 until nGridDimension) yield 0).toList::List(n)::(for( k<- nGridDimension+1 until self.nGridDim.length) yield 0).toSeq[Int])
     
-    
-    for (i <- 0 until sz) {
-        for (n <- 0 until self.qk(i).numberRows) {
-          parameterKnotsAux(n) = parameterKnotsAux(n) ++ Seq(self.qk(i)(n, 0))
-        }
-    
-      }  
+
+    for (x <- xcoord)
+    {
+      parameterKnotsAux(nGridDimension) = parameterKnotsAux(nGridDimension) ++ Seq(self(x))
+    }
+
   }
   
 
@@ -67,9 +67,9 @@ trait parameterVector {
 
   //Calculating the final parameter knots associated to the sequence of points qk
   // with the Chord method
-  val parametersKnots_Chord = (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
-  val parametersKnots_EquallySpaced = (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
-  val parametersKnots_Centripetal = (for ( i <- 0 until self.dim ) yield Seq[Double]()).toArray
+  val parametersKnots_Chord = (for ( i <- 0 until self.nGridDim ) yield Seq[Double]()).toArray
+  val parametersKnots_EquallySpaced = (for ( i <- 0 until self.nGridDim ) yield Seq[Double]()).toArray
+  val parametersKnots_Centripetal = (for ( i <- 0 until self.nGridDim ) yield Seq[Double]()).toArray
 
   for (i <- 0 until orderedParameterKnots.length) {
 
@@ -125,7 +125,7 @@ trait parameterVector {
   (for (i <- 0 until qk.length) yield {
         val q = qk(i).clone()
     
-    for (j <- 0 until dim)
+    for (j <- 0 until nGridDim)
     {
       val index = orderedParameterKnots(j).indexOf(qk(i)(j,0))
       val tx = parametersKnots_EquallySpaced(j)(index)
@@ -247,7 +247,7 @@ trait solver {
 
     
     val listOfMatrix =
-      for (k <- 0 until dim)
+      for (k <- 0 until nGridDim)
       yield
     {
       val qMatrix = new Matrix[Double](samples,samples)
@@ -269,16 +269,16 @@ trait solver {
 
     }
 
-    var rightM = new Matrix[Double](samples,dim+1)
+    var rightM = new Matrix[Double](samples,nGridDim+1)
     for(i <- 0 until samples)
     {
-      for(j <- 0 until dim)
+      for(j <- 0 until nGridDim)
       rightM.set(i,j,tqk(i)(j,0))
 
-      rightM.set(i,dim,z(i))
+      rightM.set(i,nGridDim,z(i))
     }
 
-    var mSol = new Matrix[Double](samples,dim+1)
+    var mSol = new Matrix[Double](samples,nGridDim+1)
     //computing the contol points:
     for (m <- listOfMatrix)
     {
