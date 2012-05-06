@@ -108,7 +108,12 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
     protected val start:Int
     protected val step:Int
     val maxCount:Int
-    def hasNext:Boolean = (position+1)<maxCount
+
+      def hasNext:Boolean = {
+        (position+1) < maxCount
+      }
+
+
     def next:T1=
     {  
       try {
@@ -159,7 +164,7 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
     val step = if(isRowMajor) 1 else this.numberRows
     var counter=0
     val rArr= new Array[T1](this.numberCols)
-    while(counter<this.numberCols)
+    while(counter  < this.numberCols)
     {
      rArr(counter) =  data(start+step*counter)
       counter = counter + 1

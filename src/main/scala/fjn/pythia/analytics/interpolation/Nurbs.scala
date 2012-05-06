@@ -1,3 +1,5 @@
+
+
 package fjn.pythia.analytics.interpolation
 
 import fjn.pythia.matrix.Matrix
@@ -12,12 +14,12 @@ import fjn.pythia.matrix.Matrix
  * To change this template use File | Settings | File Templates.
  */
 
-class Nurbs(val qk:Array[Matrix[Double]],val basisOrder:Array[Int]) extends controlPoints
+class Nurbs(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int]) extends controlPoints
     with parameterVector
     with BasisFunctionOrder
     with KnotsVector
     with Basis
-    with solver
+    with solver1D
     {
 
 
@@ -36,3 +38,5 @@ class Nurbs(val qk:Array[Matrix[Double]],val basisOrder:Array[Int]) extends cont
   }
 
 }
+
+

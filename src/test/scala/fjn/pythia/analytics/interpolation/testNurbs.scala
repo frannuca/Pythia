@@ -13,14 +13,13 @@ import java.util.ArrayList
 import akka.dispatch.Future
 import fjn.pythia.analytics.interpolation.Nurbs
 
-/**
+/*
  * Created by IntelliJ IDEA.
  * User: fran
  * Date: 3/29/12
  * Time: 8:24 PM
  * To change this template use File | Settings | File Templates.
- */
-
+  */
 class testNurbs  extends Specification {
   "Creating a optimization test for SWARM" should {
 
@@ -138,3 +137,4 @@ class testNurbs  extends Specification {
   }
 
 }
+

@@ -1,6 +1,8 @@
+
 package fjn.pythia.analytics.interpolation
 
 import fjn.pythia.matrix.Matrix
+import scala.Double
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,7 +13,7 @@ import fjn.pythia.matrix.Matrix
  */
 
 
-/**The user must provide an array of samples points which the algorithm 
+/**The user must provide an array of samples points which the algorithm
  uses as control points.
  The presentatin of the control points is performed as a lineal array of points plus
  a list of dimensions. Typically if our points are part of a rectangular grid
@@ -25,8 +27,8 @@ trait controlPoints {
   // item(i,j)=qk(j*dim_i+i)
   val qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
   protected val tqk:Array[Matrix[Double]] //list of transformed control point in the target NURBS space
-  val nGridDim:Seq[Int] /// list of dimension composing our grid
-  val viewer = new MultiArrayView[Matrix[Double]](qk,nGridDim)
+  val dim:Seq[Int] /// list of dimension composing our grid
+  val viewer = new MultiArrayView[Matrix[Double]](qk,dim)
   
   def apply(w:Seq[Int]):Matrix[Double]=
   {
@@ -41,24 +43,24 @@ trait controlPoints {
 trait parameterVector {
   self: controlPoints =>
 
-  //Extracting the positions of each axis.. this variable is meant host the list of points per axis in the interpolation
-  //grid
+  //Extracting the positions of each axis:
   private val parameterKnotsAux = 
-    (for ( i <- 0 until self.nGridDim.length ) yield Seq[Double]()).toArray
+    (for ( i <- 0 until self.dim.length ) yield Seq[Double]()).toArray
 
 
   //Find the list of points per coordinate:
-  for ( (sz,nGridDimension) <- (self.nGridDim zip (0 until self.nGridDim.length)) )
+  for ( (sz,dimension) <- (self.dim zip (0 until self.dim.length)) )
   {
     val xcoord=
-      for (n <- 0 until sz) yield self( (for( k <- 0 until nGridDimension) yield 0).toList::List(n)::(for( k<- nGridDimension+1 until self.nGridDim.length) yield 0).toSeq[Int])
+    for (n <- 0 until sz) yield self( (for( k<- 0 until dimension) yield 0).toList:::List(n):::(for( k<- dimension+1 until self.dim.length) yield 0).toList)
     
-
-    for (x <- xcoord)
-    {
-      parameterKnotsAux(nGridDimension) = parameterKnotsAux(nGridDimension) ++ Seq(self(x))
-    }
-
+    
+    for (i <- 0 until sz) {
+        for (n <- 0 until self.qk(i).numberRows) {
+          parameterKnotsAux(n) = parameterKnotsAux(n) ++ Seq(self.qk(i)(n, 0))
+        }
+    
+      }  
   }
   
 
@@ -67,9 +69,9 @@ trait parameterVector {
 
   //Calculating the final parameter knots associated to the sequence of points qk
   // with the Chord method
-  val parametersKnots_Chord = (for ( i <- 0 until self.nGridDim ) yield Seq[Double]()).toArray
-  val parametersKnots_EquallySpaced = (for ( i <- 0 until self.nGridDim ) yield Seq[Double]()).toArray
-  val parametersKnots_Centripetal = (for ( i <- 0 until self.nGridDim ) yield Seq[Double]()).toArray
+  val parametersKnots_Chord = (for ( i <- 0 until parameterKnotsAux.length ) yield Seq[Double]()).toArray
+  val parametersKnots_EquallySpaced = (for ( i <- 0 until parameterKnotsAux.length ) yield Seq[Double]()).toArray
+  val parametersKnots_Centripetal = (for ( i <- 0 until parameterKnotsAux.length ) yield Seq[Double]()).toArray
 
   for (i <- 0 until orderedParameterKnots.length) {
 
@@ -123,19 +125,13 @@ trait parameterVector {
 
   val tqk =
   (for (i <- 0 until qk.length) yield {
-        val q = qk(i).clone()
-    
-    for (j <- 0 until nGridDim)
-    {
-      val index = orderedParameterKnots(j).indexOf(qk(i)(j,0))
-      val tx = parametersKnots_EquallySpaced(j)(index)
-
-      q.set(j,0,tx)
-
-    }
-
-     q
-          
+        val q:Matrix[Double] = qk(i).clone()
+        val xy = viewer.fromIndex2Seq(i)
+        for ((n,v) <- (0 until xy.length) zip xy)
+        {
+          q.set(n,0,parameterKnotsAux(n)(v))
+        }
+       q
       }).toArray[Matrix[Double]]
 
 
@@ -149,6 +145,7 @@ trait BasisFunctionOrder
 {
   val basisOrder:Array[Int]
 }
+
 trait KnotsVector {
   self:parameterVector with BasisFunctionOrder=>
 
@@ -236,64 +233,61 @@ trait Basis {
 
 }
 
-trait solver {
+
+trait solver1D {
   self: Basis with parameterVector with controlPoints with BasisFunctionOrder=>
+  val samples:Int = self.qk.length
+  var pk: Matrix[Double] = new Matrix[Double](1,1)
+  val weights:Array[Double] = new Array[Double](self.qk.length)
 
-  val samples = self.qk.length
-  var pk = new Matrix[Double](1,1)
-  val weights = new Array[Double](self.qk.length)
-  def solve(z:Array[Double])={
+  def solve(z:Array[Double]):Boolean={
 
-
-    
-    val listOfMatrix =
-      for (k <- 0 until nGridDim)
-      yield
-    {
-      val qMatrix = new Matrix[Double](samples,samples)
-      for (i <- 0 until samples)
-      {
-        for (j <- 0 until  samples)
+      val listOfMatrix =
+        for (k <- 0 until dim(0))
+        yield
         {
-          val kaux = k
-          val iaux = i
-          val jaux = j
-          val paux =   basisOrder(k)
-          val vv = NEquallySpaced(j,basisOrder(k),k)(tqk(i)(k,0))
-          qMatrix.set(i,j,vv )
+          val qMatrix = new Matrix[Double](samples,samples)
+          for (i <- 0 until samples)
+          {
+            for (j <- 0 until  samples)
+            {
+              val kaux = k
+              val iaux = i
+              val jaux = j
+              val paux =   basisOrder(k)
+              val vv = NEquallySpaced(j,basisOrder(k),k)(tqk(i)(k,0))
+              qMatrix.set(i,j,vv )
+
+            }
+
+          }
+          qMatrix
 
         }
 
+      var rightM = new Matrix[Double](samples,dim(0)+1)
+      for(i <- 0 until samples)
+      {
+        for(j <- 0 until dim(0))
+          rightM.set(i,j,tqk(i)(j,0))
+
+        rightM.set(i,dim(0),z(i))
       }
-      qMatrix
 
+      var mSol = new Matrix[Double](samples,dim(0)+1)
+      //computing the contol points:
+      for (m <- listOfMatrix)
+      {
+        m.invert()
+        rightM = m * rightM
+      }
+
+      pk = rightM
+
+
+    true
     }
-
-    var rightM = new Matrix[Double](samples,nGridDim+1)
-    for(i <- 0 until samples)
-    {
-      for(j <- 0 until nGridDim)
-      rightM.set(i,j,tqk(i)(j,0))
-
-      rightM.set(i,nGridDim,z(i))
-    }
-
-    var mSol = new Matrix[Double](samples,nGridDim+1)
-    //computing the contol points:
-    for (m <- listOfMatrix)
-    {
-      m.invert()
-      rightM = m * rightM
-    }
-
-   pk = rightM
-
-  }
-  
-   
-
 
 
 }
-
 
