@@ -6,21 +6,19 @@ import fjn.pythia.plotting.plot2D
 import scala.collection.JavaConversions._
 import java.io.{BufferedReader, InputStreamReader}
 
-import akka.actor.Actor
-import akka.actor.Actor.{actorOf}
-import akka.event.EventHandler
-import java.util.ArrayList
 import akka.dispatch.Future
 import fjn.pythia.analytics.interpolation.Nurbs
 
-/*
+
+/**
  * Created by IntelliJ IDEA.
  * User: fran
- * Date: 3/29/12
- * Time: 8:24 PM
+ * Date: 5/7/12
+ * Time: 11:15 PM
  * To change this template use File | Settings | File Templates.
-  */
-class testNurbs  extends Specification {
+ */
+
+class testNurbs2D extends Specification {
   "Creating a optimization test for SWARM" should {
 
     "Converge to given solution" in {
@@ -29,23 +27,36 @@ class testNurbs  extends Specification {
 
   }
 
-  
+
   def `testAlgorithm` ={
 
     val nSamples=50
     val qk =
       (for(h <- 0 until nSamples;
-        val mt = new Matrix[Double](1,1)
-      ) yield {mt.zeros;val mt2=mt+(h.toDouble/nSamples.toDouble*3.1415*20.0); mt2}
-            ).toArray[Matrix[Double]]
-    
+           k<- 0 until nSamples;
+        val mt = new Matrix[Double](2,1)
+      ) yield {
+        mt.zeros;
+        mt.set(0,0,k.toDouble/nSamples.toDouble*3.1415*20.0)
+        mt.set(1,0,h.toDouble/nSamples.toDouble*3.1415*20.0)
+        mt
+        }
+        ).toArray[Matrix[Double]]
 
 
-    val z =(for(h <- 0 until nSamples;
-            val r = math.cos(h.toDouble/nSamples.toDouble*3.1415*20.0)*math.exp(-h.toDouble/nSamples)) yield r).toArray[Double]
+
+    val z =(for(q <- qk)
+           yield
+            {
+              val x= q(0,0)
+              val y =q(1,0)
+
+              math.sin(3.1415*x)/(3.1415*x) * math.sin(3.1415*y)/(3.1415*y)
+            }).toArray
+
 
     val order =3
-    val bspline = new Nurbs(qk,Array(order,order),Seq(qk.length))
+    val bspline = new Nurbs(qk,Array(order,order),Seq(nSamples,nSamples))
     bspline.solve(z);
 
 
@@ -137,4 +148,5 @@ class testNurbs  extends Specification {
   }
 
 }
+
 

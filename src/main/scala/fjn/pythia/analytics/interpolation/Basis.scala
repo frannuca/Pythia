@@ -26,7 +26,9 @@ trait controlPoints {
   ///The array of sample in dimension dk is extracted as follows:
   // item(i,j)=qk(j*dim_i+i)
   val qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
-  protected val tqk:Array[Matrix[Double]] //list of transformed control point in the target NURBS space
+  protected val tqk_Centripetal:Array[Matrix[Double]] //list of transformed control point in the target NURBS space
+  protected val tqk_Chord:Array[Matrix[Double]] //list of transformed control point in the target NURBS space
+  protected val tqk_EquallySpaced:Array[Matrix[Double]]
   val dim:Seq[Int] /// list of dimension composing our grid
   val viewer = new MultiArrayView[Matrix[Double]](qk,dim)
   
@@ -48,17 +50,16 @@ trait parameterVector {
     (for ( i <- 0 until self.dim.length ) yield Seq[Double]()).toArray
 
 
-  //Find the list of points per coordinate:
-  for ( (sz,dimension) <- (self.dim zip (0 until self.dim.length)) )
+  //Find the list of points per coordinate:  
+  for ( (sz,nCoord) <- self.dim  zip (0 until self.dim.length) )
   {
-    val xcoord=
-    for (n <- 0 until sz) yield self( (for( k<- 0 until dimension) yield 0).toList:::List(n):::(for( k<- dimension+1 until self.dim.length) yield 0).toList)
-    
-    
     for (i <- 0 until sz) {
-        for (n <- 0 until self.qk(i).numberRows) {
-          parameterKnotsAux(n) = parameterKnotsAux(n) ++ Seq(self.qk(i)(n, 0))
-        }
+        
+          val m = (for (j <- 0 until self.dim.length) yield 0).toArray[Int]
+          m(nCoord)=i
+          
+          parameterKnotsAux(nCoord) = parameterKnotsAux(nCoord) ++ Seq(viewer(m)(nCoord,0))
+        
     
       }  
   }
@@ -123,17 +124,39 @@ trait parameterVector {
           parametersKnots_Centripetal(i) ++ Seq(1.0d)
   }
 
-  val tqk =
+
+  val tqk_Centripetal =
   (for (i <- 0 until qk.length) yield {
         val q:Matrix[Double] = qk(i).clone()
         val xy = viewer.fromIndex2Seq(i)
         for ((n,v) <- (0 until xy.length) zip xy)
         {
-          q.set(n,0,parameterKnotsAux(n)(v))
+          q.set(n,0,parametersKnots_Centripetal(n)(v))
         }
        q
       }).toArray[Matrix[Double]]
 
+  val tqk_EquallySpaced =
+    (for (i <- 0 until qk.length) yield {
+          val q:Matrix[Double] = qk(i).clone()
+          val xy = viewer.fromIndex2Seq(i)
+          for ((n,v) <- (0 until xy.length) zip xy)
+          {
+            q.set(n,0,parametersKnots_EquallySpaced(n)(v))
+          }
+         q
+        }).toArray[Matrix[Double]]
+
+  val tqk_Chord =
+    (for (i <- 0 until qk.length) yield {
+          val q:Matrix[Double] = qk(i).clone()
+          val xy = viewer.fromIndex2Seq(i)
+          for ((n,v) <- (0 until xy.length) zip xy)
+          {
+            q.set(n,0,parametersKnots_Chord(n)(v))
+          }
+         q
+        }).toArray[Matrix[Double]]
 
   //  def getParameterVector():Array[Matrix[Double]]=
   //  {
@@ -243,7 +266,7 @@ trait solver1D {
   def solve(z:Array[Double]):Boolean={
 
       val listOfMatrix =
-        for (k <- 0 until dim(0))
+        for (k <- 0 until dim.length)
         yield
         {
           val qMatrix = new Matrix[Double](samples,samples)
@@ -255,7 +278,7 @@ trait solver1D {
               val iaux = i
               val jaux = j
               val paux =   basisOrder(k)
-              val vv = NEquallySpaced(j,basisOrder(k),k)(tqk(i)(k,0))
+              val vv = NEquallySpaced(j,basisOrder(k),k)(tqk_EquallySpaced(i)(k,0))
               qMatrix.set(i,j,vv )
 
             }
@@ -265,16 +288,16 @@ trait solver1D {
 
         }
 
-      var rightM = new Matrix[Double](samples,dim(0)+1)
+      var rightM = new Matrix[Double](samples,dim.length+1)
       for(i <- 0 until samples)
       {
-        for(j <- 0 until dim(0))
-          rightM.set(i,j,tqk(i)(j,0))
+        for(j <- 0 until dim.length)
+          rightM.set(i,j,tqk_EquallySpaced(i)(j,0))
 
-        rightM.set(i,dim(0),z(i))
+        rightM.set(i,dim.length,z(i))
       }
 
-      var mSol = new Matrix[Double](samples,dim(0)+1)
+      var mSol = new Matrix[Double](samples,dim.length+1)
       //computing the contol points:
       for (m <- listOfMatrix)
       {
