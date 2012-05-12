@@ -7,7 +7,7 @@ import scala.collection.JavaConversions._
 import java.io.{BufferedReader, InputStreamReader}
 
 import akka.dispatch.Future
-import fjn.pythia.analytics.interpolation.Nurbs
+
 
 
 /**
@@ -30,15 +30,15 @@ class testNurbs2D extends Specification {
 
   def `testAlgorithm` ={
 
-    val nSamples=50
+    val nSamples=5
     val qk =
       (for(h <- 0 until nSamples;
            k<- 0 until nSamples;
         val mt = new Matrix[Double](2,1)
       ) yield {
         mt.zeros;
-        mt.set(0,0,k.toDouble/nSamples.toDouble*3.1415*20.0)
-        mt.set(1,0,h.toDouble/nSamples.toDouble*3.1415*20.0)
+        mt.set(1,0,h.toDouble)
+        mt.set(0,0,k.toDouble)
         mt
         }
         ).toArray[Matrix[Double]]
@@ -51,93 +51,105 @@ class testNurbs2D extends Specification {
               val x= q(0,0)
               val y =q(1,0)
 
-              math.sin(3.1415*x)/(3.1415*x) * math.sin(3.1415*y)/(3.1415*y)
+              x+y
             }).toArray
 
 
-    val order =3
-    val bspline = new Nurbs(qk,Array(order,order),Seq(nSamples,nSamples))
+    val order =1
+    val bspline = new Nurbs2D(qk,Array(order,order),Seq(nSamples,nSamples))
     bspline.solve(z);
 
 
-    val ax = bspline.NCentripetal(4,order,0)(1)
 
+ //
 
     var xtotal= Seq[java.util.ArrayList[java.lang.Double]]()
     var ytotal= Seq[java.util.ArrayList[java.lang.Double]]()
+
 //
 //
 //
-//
-//      for(nf <- 0 until nSamples )
-//        {
-//
-//          xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
-//          ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
-//
-//          for(i<- 0 until  1001)
-//              {
-//                val t = 1.0/ 1000.toDouble * i.toDouble
-//                val ax = bspline.NCentripetal(nf,order,0)(t)
-//                //ax.set(1,0,z(i))
-//
-//                xtotal.last.add(t)
-//                ytotal.last.add(ax)
-//
-//              }
-//
-//        }
-    xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
-    ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+      for(nf <- 0 until nSamples )
+        {
 
-    {
-      for(i<- 0 until  1000)
-      {
-        val t = 1.0/ 1000.toDouble * i.toDouble
-        val ax = bspline(t)
-        // ax.set(1,0,z(i))
-
-        xtotal.last.add(ax(0,0))
-        ytotal.last.add(ax(1,0))
-
-      }
+          xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+          ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
 
 
-
-    }
-
-    xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
-    ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
-
-    {
-      for(i<- 0 until  z.length)
-      {
-
-
-
-        xtotal.last.add(qk(i)(0,0))
-        ytotal.last.add(z(i))
-
-      }
-
-
-
-    }
-//
-//    val axtest = bspline(1.0)
-
-    for (i <- 0 until xtotal.length)
-    {
-      val p = new plot2D()
-      p.AddCurve(xtotal(i),ytotal(i),i.toString);
-      val fut =
-        Future
+          for(i<- 0 until  10)
               {
-                p.showPanel()
+                for(j<- 0 until  10)
+                {
+                  val u = 1.0/ 10.toDouble * i.toDouble
+                  val v = 1.0/ 10.toDouble * j.toDouble
+                  val ax = bspline(u,v)
+                  val b=1.0
+                                  //ax.set(1,0,z(i))
+
+//                                  xtotal.last.add(t)
+//                                  ytotal.last.add(ax)
+                }
+
 
               }
 
-    }
+        }
+        var aa = bspline(1,1)
+        aa = bspline(0.25,0.25)
+        aa = bspline(0.75,0.25)
+        val aaa=0
+
+//    xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+//    ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+//
+//    {
+//      for(i<- 0 until  1000)
+//      {
+//        val t = 1.0/ 1000.toDouble * i.toDouble
+//        val ax = bspline(t)
+//        // ax.set(1,0,z(i))
+//
+//        xtotal.last.add(ax(0,0))
+//        ytotal.last.add(ax(1,0))
+//
+//      }
+//
+//
+//
+//    }
+
+//    xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+//    ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
+//
+//    {
+//      for(i<- 0 until  z.length)
+//      {
+//
+//
+//
+//        xtotal.last.add(qk(i)(0,0))
+//        ytotal.last.add(z(i))
+//
+//      }
+//
+//
+//
+//    }
+//
+//    val axtest = bspline(1.0)
+
+//    for (i <- 0 until xtotal.length)
+//    {
+//      val p = new plot2D()
+//      p.AddCurve(xtotal(i),ytotal(i),i.toString);
+//      val fut =
+//        Future
+//              {
+//                p.showPanel()
+//
+//              }
+//
+//    }
 
     val br = new BufferedReader(new InputStreamReader(System.in));
     br.readLine()

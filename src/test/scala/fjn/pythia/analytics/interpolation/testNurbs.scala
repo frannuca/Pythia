@@ -11,7 +11,7 @@ import akka.actor.Actor.{actorOf}
 import akka.event.EventHandler
 import java.util.ArrayList
 import akka.dispatch.Future
-import fjn.pythia.analytics.interpolation.Nurbs
+
 
 /*
  * Created by IntelliJ IDEA.
@@ -45,7 +45,7 @@ class testNurbs  extends Specification {
             val r = math.cos(h.toDouble/nSamples.toDouble*3.1415*20.0)*math.exp(-h.toDouble/nSamples)) yield r).toArray[Double]
 
     val order =3
-    val bspline = new Nurbs(qk,Array(order,order),Seq(qk.length))
+    val bspline = new Nurbs1D(qk,Array(order,order),Seq(qk.length))
     bspline.solve(z);
 
 
