@@ -10,7 +10,7 @@ import fjn.pythia.matrix.Matrix
  * To change this template use File | Settings | File Templates.
  */
 
-trait solver2D  {
+trait Solver2D  {
   self: Basis with parameterVector with controlPoints with BasisFunctionOrder=>
   val samples:Int = self.qk.length
 
@@ -25,7 +25,7 @@ trait solver2D  {
           val uk = viewer2(Seq(i, 0))(0, 0)
           for (j <- 0 until dim(0)) {
 
-            val vv = NEquallySpaced(j, basisOrder(0), 0)(uk)
+            val vv = NBasis(j, basisOrder(0), 0)(uk)
             qXMatrix.set(i, j, vv)
           }
         }
@@ -72,7 +72,7 @@ trait solver2D  {
   def solve(z:Array[Double]):Boolean={
 
 
-    val viewer2 = new MultiArrayView[Matrix[Double]](tqk_EquallySpaced,dim)
+    val viewer2 = new MultiArrayView[Matrix[Double]](tqk,dim)
     val viewerZ = new MultiArrayView[Double](z,dim)
 
     val Rl = SolveOnU(z,viewer2,viewerZ);
@@ -81,7 +81,7 @@ trait solver2D  {
         for (i <- 0 until dim(1)) {
           val vk = viewer2(Seq(0, i))(1, 0)
           for (j <- 0 until dim(1)) {
-            val vv = NEquallySpaced(j, basisOrder(1), 1)(vk)
+            val vv = NBasis(j, basisOrder(1), 1)(vk)
             qXMatrix.set(i, j, vv)
           }
         }

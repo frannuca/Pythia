@@ -7,7 +7,7 @@ import fjn.pythia.matrix.Matrix
 
 
 /**
- * Created by IntelliJ IDEA.
+ * Created by fjn
  * User: fran
  * Date: 3/23/12
  * Time: 6:38 PM
@@ -17,11 +17,11 @@ import fjn.pythia.matrix.Matrix
 
 class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int])
     extends controlPoints
-    with parameterVector
+    with parameterVectorEquallySpaced
     with BasisFunctionOrder
     with KnotsVector
     with Basis
-    with solver1D{
+    with Solver1D{
   def  apply(t:Double):Matrix[Double] ={
 
   //      var sum = new Matrix[Double](2,1)
@@ -41,11 +41,11 @@ class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
 
 class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int])
   extends controlPoints
-      with parameterVector
+      with parameterVectorEquallySpaced
       with BasisFunctionOrder
       with KnotsVector
       with Basis
-      with solver2D{
+      with Solver2D{
 
   def  apply(u:Double,v:Double):Matrix[Double] ={
 
@@ -58,7 +58,7 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
             pAux.set(0,0,pk(i)(j,0))
             pAux.set(1,0,pk(i)(j,1))
             pAux.set(2,0,pk(i)(j,2))
-            val basis = (NEquallySpaced(i,basisOrder(0),0)(u)*NEquallySpaced(j,basisOrder(1),1)(v))
+            val basis = (NBasis(i,basisOrder(0),0)(u)*NBasis(j,basisOrder(1),1)(v))
             sum = sum +    pAux * basis
           }
 

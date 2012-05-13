@@ -3,7 +3,7 @@ package fjn.pythia.analytics.interpolation
 import fjn.pythia.matrix.Matrix
 
 /**
- * Created by IntelliJ IDEA.
+ * Created by fjn
  * User: fran
  * Date: 5/8/12
  * Time: 7:41 AM
@@ -11,7 +11,7 @@ import fjn.pythia.matrix.Matrix
  */
 
 
-trait solver1D {
+trait Solver1D {
   self: Basis with parameterVector with controlPoints with BasisFunctionOrder=>
   val samples:Int = self.qk.length
   var pk: Matrix[Double] = new Matrix[Double](1,1)
@@ -32,7 +32,7 @@ trait solver1D {
               val iaux = i
               val jaux = j
               val paux =   basisOrder(k)
-              val vv = NEquallySpaced(j,basisOrder(k),k)(tqk_EquallySpaced(i)(k,0))
+              val vv = NBasis(j,basisOrder(k),k)(tqk(i)(k,0))
               qMatrix.set(i,j,vv )
 
             }
@@ -46,7 +46,7 @@ trait solver1D {
       for(i <- 0 until samples)
       {
         for(j <- 0 until dim.length)
-          rightM.set(i,j,tqk_EquallySpaced(i)(j,0))
+          rightM.set(i,j,tqk(i)(j,0))
 
         rightM.set(i,dim.length,z(i))
       }

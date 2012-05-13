@@ -49,7 +49,7 @@ class testNurbs  extends Specification {
     bspline.solve(z);
 
 
-    val ax = bspline.NCentripetal(4,order,0)(1)
+    val ax = bspline.NBasis(4,order,0)(1)
 
 
     var xtotal= Seq[java.util.ArrayList[java.lang.Double]]()
