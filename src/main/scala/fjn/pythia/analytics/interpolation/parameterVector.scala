@@ -38,6 +38,8 @@ trait parameterVector {
 
 
   val tqk:Array[Matrix[Double]]
+  
+
 
   }
 

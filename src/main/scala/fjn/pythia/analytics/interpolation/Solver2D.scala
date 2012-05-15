@@ -17,12 +17,13 @@ trait Solver2D  {
   val weights:Array[Double] = new Array[Double](self.qk.length)
   var pk:Seq[Matrix[Double]] = Seq()
   
-  def SolveOnU(z:Array[Double],viewer2:MultiArrayView[Matrix[Double]],viewerZ:MultiArrayView[Double]):Seq[Matrix[Double]]=
+  def SolveOnU(z:Array[Double],viewer_norm:MultiArrayView[Matrix[Double]],
+               viewer_original:MultiArrayView[Matrix[Double]],viewerZ:MultiArrayView[Double]):Seq[Matrix[Double]]=
   {
          //Preparing the matrix for constant y-slices:
         val qXMatrix = new Matrix[Double](dim(0),dim(0))
         for (i <- 0 until dim(0)) {
-          val uk = viewer2(Seq(i, 0))(0, 0)
+          val uk = viewer_norm(Seq(i, 0))(0, 0)
           for (j <- 0 until dim(0)) {
 
             val vv = NBasis(j, basisOrder(0), 0)(uk)
@@ -51,7 +52,7 @@ trait Solver2D  {
                    for(i <- 0 until dim(0))
                    {
                      val auxPos = Seq(i,l)
-                     val posq = viewer2(auxPos)
+                     val posq = viewer_original(auxPos)
                      for(j <- 0 until sampleSize-1)
                      {
 
@@ -72,14 +73,15 @@ trait Solver2D  {
   def solve(z:Array[Double]):Boolean={
 
 
-    val viewer2 = new MultiArrayView[Matrix[Double]](tqk,dim)
+    val viewer_normalized = new MultiArrayView[Matrix[Double]](tqk,dim)
+    val viewer_original = new MultiArrayView[Matrix[Double]](qk,dim)
     val viewerZ = new MultiArrayView[Double](z,dim)
 
-    val Rl = SolveOnU(z,viewer2,viewerZ);
+    val Rl = SolveOnU(z,viewer_normalized,viewer_original,viewerZ);
 
     val qXMatrix = new Matrix[Double](dim(1),dim(1))
         for (i <- 0 until dim(1)) {
-          val vk = viewer2(Seq(0, i))(1, 0)
+          val vk = viewer_normalized(Seq(0, i))(1, 0)
           for (j <- 0 until dim(1)) {
             val vv = NBasis(j, basisOrder(1), 1)(vk)
             qXMatrix.set(i, j, vv)

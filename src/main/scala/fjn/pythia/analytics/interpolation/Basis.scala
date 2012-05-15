@@ -94,6 +94,8 @@ trait Basis {
   }
 
   def NBasis(i: Int, p: Int,nCoord:Int)(u: Double) = N(self.knotsVector)(i,p,nCoord)(u)
+
+
 }
 
 

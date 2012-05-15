@@ -28,13 +28,8 @@ trait Solver1D {
           {
             for (j <- 0 until  samples)
             {
-              val kaux = k
-              val iaux = i
-              val jaux = j
-              val paux =   basisOrder(k)
               val vv = NBasis(j,basisOrder(k),k)(tqk(i)(k,0))
               qMatrix.set(i,j,vv )
-
             }
 
           }
@@ -46,7 +41,7 @@ trait Solver1D {
       for(i <- 0 until samples)
       {
         for(j <- 0 until dim.length)
-          rightM.set(i,j,tqk(i)(j,0))
+          rightM.set(i,j,qk(i)(j,0))
 
         rightM.set(i,dim.length,z(i))
       }
@@ -64,6 +59,7 @@ trait Solver1D {
 
     true
     }
+
 
 
 }

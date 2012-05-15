@@ -59,6 +59,8 @@ class testNurbs2D extends Specification {
     val bspline = new Nurbs2D(qk,Array(order,order),Seq(nSamples,nSamples))
     bspline.solve(z);
 
+    val rng1 = bspline.getBasisRange(0)(0.5);
+
 
 
  //
@@ -98,6 +100,12 @@ class testNurbs2D extends Specification {
         aa = bspline(0.25,0.25)
         aa = bspline(0.75,0.25)
         val aaa=0
+     for(h <- 0 until 11)
+     {
+       var u1 = bspline.getNormalizedCoord(h.toDouble,0)
+       println(h.toString + "->"+u1.toString)
+     }
+       
 
 //    xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
 //    ytotal = ytotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
