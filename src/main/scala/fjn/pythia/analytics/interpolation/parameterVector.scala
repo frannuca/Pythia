@@ -109,7 +109,7 @@ trait parameterVectorChord extends parameterVector {
   for (n <- 1 until parameterKnotsAux(i).length - 1) {
 
     parameterKnots(i) =
-      parameterKnots(i) ++ Seq(parameterKnots(i)(n - 1) + math.sqrt(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))) / normLength)
+      parameterKnots(i) ++ Seq(parameterKnots(i)(n - 1) +(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))) / normLength)
   }
 
   parameterKnots(i) =

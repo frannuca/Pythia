@@ -1,23 +1,25 @@
 package fjn.pythia.plotting;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
-
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.plot.Marker;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.annotations.XYTextAnnotation;
+import org.jfree.chart.axis.AxisLocation;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.chart.JFreeChart;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
 
+import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,12 +28,13 @@ import org.jfree.chart.JFreeChart;
  * Time: 10:27 AM
  * To change this template use File | Settings | File Templates.
  */
-public class plot2D extends JPanel {
-    public plot2D() {
-        super();
+public class plot2D extends ApplicationFrame {
+    public plot2D(final String title) {
+
+            super(title);
 
 
-    }
+        }
 
     XYSeriesCollection dataset = new XYSeriesCollection();
 
@@ -53,25 +56,36 @@ public class plot2D extends JPanel {
 
     }
 
+
     public void showPanel()
     {
 
-        JFreeChart chart = ChartFactory.createXYLineChart("xy plot", "normalize coord", "basis", dataset, PlotOrientation.VERTICAL, true, true, false);
+        final CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new NumberAxis("Domain"));
+           plot.setGap(10.0);
 
-                XYPlot plot = (XYPlot) chart.getPlot();
-                plot.setDomainGridlineStroke(new BasicStroke(1));
+        final XYItemRenderer renderer1 = new StandardXYItemRenderer();
+                final NumberAxis rangeAxis1 = new NumberAxis("x");
+        final XYPlot subplot1 = new XYPlot(dataset, null, rangeAxis1, renderer1);
+                subplot1.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+           // add the subplots...
+           plot.add(subplot1, 1);
 
-                ChartPanel chartPanel = new ChartPanel(chart);
+           plot.setOrientation(PlotOrientation.VERTICAL);
 
-                add(chartPanel);
 
-                JFrame frame = new JFrame("Chart One");
+           // return a new chart containing the overlaid plot...
 
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        final JFreeChart chart = new JFreeChart("CombinedDomainXYPlot Demo",
+                                         JFreeChart.DEFAULT_TITLE_FONT, plot, true);
 
-                frame.getContentPane().add(this, BorderLayout.CENTER);
-                frame.pack();
-                frame.setVisible(true);
+                final ChartPanel panel = new ChartPanel(chart, true, true, true, false, true);
+                panel.setPreferredSize(new java.awt.Dimension(500, 270));
+
+                setContentPane(panel);
+
+        this.pack();
+                RefineryUtilities.centerFrameOnScreen(this);
+                this.setVisible(true);
 
     }
     private XYSeries xySeries = null;

@@ -93,7 +93,7 @@ object Dependencies {
   val grizzlyportunif = "com.sun.grizzly" % "grizzly-portunif"  % grizzlyVer
 
 
-
+  val surfaceplot = "net.ericaro" % "surfaceplotter" %"2.0.1"
   val sleepycat = "com.sleepycat" % "je" % "4.0.92"
 
   val apachenet   = "commons-net"   % "commons-net"   % "2.0"
@@ -189,7 +189,7 @@ object PythiaBuild extends Build {
 
   val akkaDeps = Seq(akka_actor,akka_remote,akka_stm)
 
-  val plotDeps = Seq(JOGL)
+  val plotDeps = Seq(JOGL,surfaceplot)
 
   /**
    * top layer  pythia
