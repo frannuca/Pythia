@@ -24,16 +24,16 @@ class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
     with Solver1D{
   def  apply(t:Double):Matrix[Double] ={
 
-        var sum = new Matrix[Double](2,1)
-        for (i <- 0 until samples)
-        {
-          val pAux = new Matrix[Double](2,1);
-          pAux.set(0,0,pk(i,0))
-          pAux.set(1,0,pk(i,1))
-          sum = sum +    pAux* NBasis(i,basisOrder(0),0)(t)
-        }
+    var sum = new Matrix[Double](2, 1)
+    for (i <- getBasisRange(t)) {
+      val pAux = new Matrix[Double](2, 1);
+      pAux.set(0, 0, pk(i, 0))
+      pAux.set(1, 0, pk(i, 1))
+      sum = sum + pAux * NBasis(i, basisOrder(0), 0)(t)
 
-      sum
+    }
+
+    sum
 
 }
 
@@ -81,7 +81,7 @@ class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
 
   def getBasisRange(t:Double):Seq[Int]={
         val vector = knotsVector(0)
-        val sz = vector.length;
+        val sz = vector.length-basisOrder(0)-1;
 
         var i=0
         var found:Boolean=false
@@ -180,7 +180,7 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
 
   def getBasisRange(nCoord:Int)(t:Double):Seq[Int]={
       val vector = knotsVector(nCoord)
-      val sz = vector.length;
+      val sz = vector.length-basisOrder(nCoord)-1;
 
       var i=0
       var found:Boolean=false
