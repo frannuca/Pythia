@@ -3,6 +3,8 @@ import Keys._
 import com.github.retronym.SbtOneJar
 
 object BuildSettings {
+
+
   val buildOrganization = "fjn"
   val buildVersion      = "1.0.0"
   val buildScalaVersion = "2.9.1"
@@ -51,8 +53,8 @@ object Resolvers {
   val oracleResolvers = Seq (sunrepo, sunrepoGF, oraclerepo)
   val mathResolvers = Seq(sunrepo,googlematrixrepo,apacheMathrepo,jna)
   val akkaResolver = Seq(akkarepo)
-  val rsl = "Scala Tools Snapshots" at "http://scala-tools.org/repo-snapshots"
-  val rs2 = "ScalaNLP Maven2" at "http://repo.scalanlp.org/repo"
+  val rsl =  "Scala Tools Snapshots" at "http://scala-tools.org/repo-snapshots/"
+  val rs2 =  "ScalaNLP Maven2" at "http://repo.scalanlp.org/repo"
 
   val scalalaResolver = Seq(rsl,rs2)
 
@@ -117,7 +119,9 @@ object Dependencies {
   val log4j_over_slf4j = "org.slf4j" % "jcl-over-slf4j" % "1.6.3"
 
 
-  val Scalala =    "org.scalala" %% "scalala" % "1.0.0.RC2-SNAPSHOT" intransitive () withSources()
+
+
+  val Scalala =    "org.scalala" %% "scalala" % "1.0.0.RC3-SNAPSHOT"
   //def Scalala =  "org.scalala" % "scalala_2.9.0-1" % "1.0.0.RC2EFG" intransitive () withSources()
   /**2D plotting library, used indirectly through Scalala */
   def JFreeCommon = "jfree" % "jcommon" % "1.0.16"
@@ -191,6 +195,10 @@ object PythiaBuild extends Build {
 
   val plotDeps = Seq(JOGL,surfaceplot)
 
+
+  val jetty = "org.mortbay.jetty" % "jetty" % "7.0.0.pre5"
+  val wwwWar = Seq();// Seq(jetty)
+
   /**
    * top layer  pythia
    */
@@ -198,7 +206,10 @@ object PythiaBuild extends Build {
     "pythia",
     file ("."),
     settings = buildSettings++ SbtOneJar.oneJarSettings ++ Seq (resolvers :=  mathResolvers ++ akkaResolver ++ scalalaResolver, libraryDependencies ++= commonDeps
-      ++ matrixDeps ++ apacheMath ++plotDeps ++akkaDeps  ++ Seq(Scalala,JFreeCommon,JFreeChart,XmlGraphicsCommons,CommonsIo,CommonsLang,JodaTime))
+      ++ matrixDeps ++ apacheMath ++plotDeps ++akkaDeps ++ wwwWar ++ Seq(Scalala,JFreeCommon,JFreeChart,XmlGraphicsCommons,CommonsIo,CommonsLang,JodaTime))
+//      ++ WebPlugin.webSettings
+
+
   ) //aggregate (optimizer,ia, fjn.fjn.fjn.pythia.pricers)
 
 

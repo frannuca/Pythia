@@ -45,7 +45,7 @@ class testNurbs  extends Specification {
 
 
 
-    val diezmado=20
+    val diezmado=1
     var z = Seq[Double]()
 
       for(i <- 0 until zsHomogeneous.length)
@@ -86,7 +86,7 @@ class testNurbs  extends Specification {
           }
 
 
-    val order =3
+    val order =0
     val bspline = new Nurbs1D(qk.toArray,Array(order),Seq(qk.length))
     bspline.solve(z.toArray);
 

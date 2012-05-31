@@ -23,7 +23,10 @@ object MatrixConstants {
   var numberOfCores: Int = 1
 
 
-
+   def Create(ncols:Int, nrows:Int):Matrix[Double]=
+   {
+     new Matrix[scala.Double](nrows,ncols)
+   }
 
 
 };
