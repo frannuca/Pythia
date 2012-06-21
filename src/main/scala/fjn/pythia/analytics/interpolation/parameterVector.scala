@@ -12,6 +12,7 @@ import fjn.pythia.matrix.Matrix
 
 /**
  * This trait computes the location of the control points into the target nurbs space
+ * The control points are computed per coordinate given the list of input points qk
  */
 trait parameterVector {
   self: controlPoints =>
@@ -25,26 +26,31 @@ trait parameterVector {
   for ((sz, nCoord) <- self.dim zip (0 until self.dim.length)) {
     for (i <- 0 until sz) {
 
-      val m = (for (j <- 0 until self.dim.length) yield 0).toArray[Int]
-      m(nCoord) = i
-
+      val m = (for (j <- 0 until self.dim.length) yield 0).toArray[Int]//generate a seq with dim 0's
+      m(nCoord) = i //alter the nCoord to the ith item, allowing to sweep on nCoord to extract the points on this axis
       parameterKnotsAux(nCoord) = parameterKnotsAux(nCoord) ++ Seq(viewer(m)(nCoord, 0))
     }
   }
  
   //Calculating the final parameter knots associated to the sequence of points qk
   // with the Chord method
-  val parameterKnots:Array[Seq[Double]]
+  def parameterKnots:Array[Seq[Double]]
 
 
-  val tqk:Array[Matrix[Double]]
-  
+  /**
+   *the linear 'matrix'  of transformed points, which consists
+   * of the original points qk but placed into the transformed coordinates (u,v)
+    */
 
+  def tqk:Array[Matrix[Double]]
 
   }
 
 
-
+/**
+ * the parameter vector (used as grid for the basis functions
+ * the Centripetal distribution is good to distribute point on non-uniform sample distribution
+ */
 trait parameterVectorCentripetal extends parameterVector {
   self: controlPoints =>
 
@@ -140,13 +146,6 @@ trait parameterVectorEquallySpaced extends parameterVector {
 
 
   for (i <- 0 until parameterKnotsAux.length){
-    //Calculate the sum of the differences between samples per coordinate for the Chord distribution
-          //normalization
-          val normLength =
-            (for (n <- 1 until parameterKnotsAux(i).length;
-                  val d = parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)
-            ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
-
 
   parameterKnots(i) = parameterKnots(i) ++ Seq(0.0)
 

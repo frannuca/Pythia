@@ -11,11 +11,9 @@ import akka.dispatch.Future
 
 
 /**
- * Created by IntelliJ IDEA.
  * User: fran
  * Date: 5/7/12
  * Time: 11:15 PM
- * To change this template use File | Settings | File Templates.
  */
 
 class testNurbs2D extends Specification {
@@ -30,10 +28,11 @@ class testNurbs2D extends Specification {
 
   def `testAlgorithm` ={
 
-    val nSamples=5
+    val nSamplesX=5
+    val nSamplesY=15
     val qk =
-      (for(h <- 0 until nSamples;
-           k<- 0 until nSamples;
+      (for(h <- 0 until nSamplesX;
+           k<- 0 until nSamplesY;
         val mt = new Matrix[Double](2,1)
       ) yield {
         mt.zeros;
@@ -56,22 +55,16 @@ class testNurbs2D extends Specification {
 
 
     val order =1
-    val bspline = new Nurbs2D(qk,Array(order,order),Seq(nSamples,nSamples))
+    val bspline = new Nurbs2D(qk,Array(order,order),Seq(nSamplesX,nSamplesY))
     bspline.solve(z);
 
     val rng1 = bspline.getBasisRange(0)(0.5);
-
-
-
- //
 
     var xtotal= Seq[java.util.ArrayList[java.lang.Double]]()
     var ytotal= Seq[java.util.ArrayList[java.lang.Double]]()
 
 //
-//
-//
-      for(nf <- 0 until nSamples )
+      for(nf <- 0 until nSamplesX )
         {
 
           xtotal = xtotal ++ Seq(new java.util.ArrayList[java.lang.Double]())
@@ -160,7 +153,7 @@ class testNurbs2D extends Specification {
 //    }
 
     val br = new BufferedReader(new InputStreamReader(System.in));
-    br.readLine()
+    //br.readLine()
 
 
 

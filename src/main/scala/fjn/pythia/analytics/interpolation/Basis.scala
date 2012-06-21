@@ -13,21 +13,20 @@ import scala.Double
  */
 
 
-
-
-
+/**
+ * contains the vector of spline order list per coordinate
+ */
 trait BasisFunctionOrder
 {
-  val basisOrder:Array[Int]
+  def basisOrder:Array[Int]
 }
 
+/**
+ * this trait hosts the vector knot which contains the list of parameter per coordinate
+ *
+ */
 trait KnotsVector {
   self:parameterVector with BasisFunctionOrder=>
-
-
-
-
-
 
   def computeKnots(params:Array[Seq[Double]]):Array[Seq[Double]]={
     val knots_ = (for ( i <- 0 until params.length ) yield Seq[Double]()).toArray
