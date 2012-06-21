@@ -157,23 +157,30 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
      while(!found)
      {
        if (math.abs(x-mean)<1e-3)
-         found = true
-
-       
-       if (x<mean)
-         {
-           dHigh = dMean
-         }
-       else if (x>mean)
        {
-         dLow = dMean
+         found = true
        }
-       else
-        found=true
+         else
+       {
+         if (x<mean)
+                  {
+                    dHigh = dMean
+                  }
+                else if (x>mean)
+                {
+                  dLow = dMean
+                }
+                else
+                 found=true
 
-       dMean = (dHigh+dLow)*0.5
-       mean = nurb(dMean)
-     }
+                dMean = (dHigh+dLow)*0.5
+                mean = nurb(dMean)
+
+                if(dHigh<=dLow)
+                  found=true
+              }
+       }
+
 
      dMean
    }

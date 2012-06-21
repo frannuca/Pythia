@@ -22,7 +22,7 @@ trait NurbsInterpolator{
 class NurbsInterpolator2D(x:Array[java.lang.Double],
               y:Array[java.lang.Double],
               z:Array[Array[java.lang.Double]],
-              order:Array[java.lang.Double]) extends NurbsInterpolator{
+              orderX:java.lang.Integer,orderY:java.lang.Integer) extends NurbsInterpolator{
 
 
       val qk =
@@ -37,7 +37,7 @@ class NurbsInterpolator2D(x:Array[java.lang.Double],
         m
       }
   
-      val bspline = new Nurbs2D(qk.toArray,order.map( s => s.toInt).toArray,Seq(x.length,y.length))
+      val bspline = new Nurbs2D(qk.toArray,Array(orderX.toInt,orderY.toInt),Seq(x.length,y.length))
   
       val Z =
       (for (i <- 0 until x.length;
@@ -64,9 +64,9 @@ class NurbsInterpolator2D(x:Array[java.lang.Double],
 }
 
 
-class NurbsInterpolator1D(x:Array[java.lang.Double],
-              z:Array[java.lang.Double],
-              order:java.lang.Double) extends NurbsInterpolator{
+class NurbsInterpolator1D(x:java.util.List[java.lang.Double],
+              z:java.util.List[java.lang.Double],
+              order:Int) extends NurbsInterpolator{
 
 
       val qk =
