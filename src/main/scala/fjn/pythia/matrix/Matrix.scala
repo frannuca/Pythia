@@ -359,7 +359,8 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
         i = i + 1
       }
 
-
+      while (listOfActors.forall(a => a.isRunning))
+           Thread.sleep(200)
     }
     else {
       var k = 0

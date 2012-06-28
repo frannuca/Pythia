@@ -3,6 +3,11 @@
 package fjn.pythia.analytics.interpolation
 
 import fjn.pythia.matrix.Matrix
+import akka.actor.Actor
+import akka.actor.Actor._
+
+import collection.mutable.ListBuffer
+import akka.dispatch.Future
 
 
 
@@ -14,6 +19,16 @@ import fjn.pythia.matrix.Matrix
  * To change this template use File | Settings | File Templates.
  */
 
+class nurb2DWorker(container:Array[Matrix[Double]],f:(Double,Double)=>Matrix[Double]) extends Actor {
+     def receive = {
+       case ((u: Double, v: Double,index:Int)) => {
+          container(index) = f(u,v)
+         self.channel tryTell true
+       }
+        case "end" => self.stop()
+      }
+
+   }
 
 class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int])
     extends controlPoints
@@ -38,6 +53,7 @@ class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
 }
 
 
+
   def getNormalizedCoord(x:Double):Double=
      {
 
@@ -57,7 +73,7 @@ class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
        var found:Boolean = false
        while(!found)
        {
-         if (math.abs(x-mean)<1e-3)
+         if (math.abs(x-mean)<1e-5)
            found = true
 
 
@@ -136,53 +152,119 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
 
       sum
   }
-  
+
+
+  /**
+   * Multithreaded calculation
+   * @param uv   
+   * @return result interpolated sequence of results
+   */
+  def  apply(uv:Seq[(Double,Double)]):Seq[Matrix[Double]] ={
+
+          val interpolatedVector = (for (i <- 0 until uv.length ) yield new Matrix[Double](3,1))
+               .toArray[Matrix[Double]]
+
+          def func = (u:Double,v:Double) =>this.apply(u,v)
+
+          implicit val timeout = Actor.Timeout(60000)
+          var workers = for (i <- 0 until 4) yield  actorOf(new nurb2DWorker(interpolatedVector,func)).start()
+
+          var nw = 0
+           
+
+
+          val futures = new ListBuffer[Future[Any]]()
+          for ( item <- (uv zip  (0 until uv.length)))
+          {
+              futures+=(workers(nw%workers.length) ? (item._1._1,item._1._2,item._2))
+              nw = (nw+1)
+            if(futures.length>4)
+            {
+              futures.foreach(fu =>
+                try{
+                    fu.get
+                    Unit
+                   }
+              catch{
+                case _ => Unit
+              }
+              )
+
+              futures.clear()
+            }
+            
+          }
+
+              futures.foreach(fu =>
+                    try{
+                        fu.get
+                        Unit
+                       }
+                  catch{
+                    case _ => Unit
+                  }
+              )
+         workers.foreach( fu => fu ! "end")
+          while (workers.forall(a => a.isRunning))
+             Thread.sleep(200)
+
+      interpolatedVector
+    }
+
   def getNormalizedCoord(x:Double,nCoord:Int):Double=
    {
-     
+
      def nurb:(Double => Double) = x=> {if (nCoord==0) this.apply(x,0)(nCoord,0) else this.apply(0,x)(nCoord,0)}
-     
+
      var dLow = 0.0
      var dHigh= 1.0
      var dMean= 0.5
-       
+
      var maxVal = nurb(dHigh)
      var minVal = nurb(dLow)
-     var mean = nurb(dMean)
-     
-     
-     
-     
-     var found:Boolean = false
-     while(!found)
-     {
-       if (math.abs(x-mean)<1e-3)
-       {
-         found = true
-       }
-         else
-       {
-         if (x<mean)
-                  {
-                    dHigh = dMean
-                  }
-                else if (x>mean)
-                {
-                  dLow = dMean
-                }
-                else
-                 found=true
 
-                dMean = (dHigh+dLow)*0.5
-                mean = nurb(dMean)
-
-                if(dHigh<=dLow)
-                  found=true
-              }
-       }
-
-
-     dMean
+     dMean = (x-minVal)/(maxVal-minVal)
+     return dMean;
+//     var mean = nurb(dMean)
+//
+//
+//
+//
+//     var counter = 0;
+//     var found:Boolean = false
+//     while(!found)
+//     {
+//       if (math.abs(x-mean)<1e-3)
+//       {
+//         found = true
+//       }
+//         else
+//       {
+//         if (x<mean)
+//                  {
+//                    dHigh = dMean
+//                  }
+//                else if (x>mean)
+//                {
+//                  dLow = dMean
+//                }
+//                else
+//                 found=true
+//
+//                dMean = (dHigh+dLow)*0.5
+//                mean = nurb(dMean)
+//
+//                if(dHigh<=dLow)
+//                  found=true
+//              }
+//       counter =counter + 1
+//            if(counter>500)
+//              found=true;
+//       }
+//
+//
+//
+//     dMean
    }
 
   def getBasisRange(nCoord:Int)(t:Double):Seq[Int]={

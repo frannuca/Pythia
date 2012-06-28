@@ -60,6 +60,12 @@ trait Solver1D {
     true
     }
 
+  
+  def setControlPoint(index:Int,value:Double):Boolean=
+  {
+    if(pk.numberRows<=index) false
+    else pk.set(index,0,value); true
+  }
 
 
 }

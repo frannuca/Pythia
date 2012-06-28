@@ -10,6 +10,7 @@ import fjn.pythia.networking.message.bindings.DVector;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -94,10 +95,39 @@ public class NurbsService implements INurbsService {
         }
     }
 
+    public DVector Compute2DMultithreaded(String sessionId, DPoint2D[] points) {
+        DVector res = new DVector();
+            if (NurbsServiceSessions.reg_.containsKey(sessionId)) {
+    
+                try {
+                    
+                    NurbsInterpolator2D instance = (NurbsInterpolator2D) NurbsServiceSessions.reg_.get(sessionId);
+                    java.lang.Double xs[] = new java.lang.Double[points.length];
+                    java.lang.Double ys[] = new java.lang.Double[points.length] ;
+                    for(int i =0;i<points.length;++i)
+                    {
+                        xs[i]=points[i].getX();
+                        ys[i]=points[i].getY();
+                    }
+                     Double[] computerVals = instance.compute(xs, ys);
+                    for(Double d:computerVals)
+                    {
+                        res.getValue().add(d);
+                    }
+                    return res;
+                } catch (Exception ex) {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+    
+    
     @Override
     public DVector Compute2DBatch(@WebParam(name = "session") String sessionId, @WebParam(name = "points") DPoint2D[] points) {
         DVector resV = new DVector();
-        
+                
         for(DPoint2D p: points)
         {
             Double r = Compute2D(sessionId, p.getX(), p.getY());

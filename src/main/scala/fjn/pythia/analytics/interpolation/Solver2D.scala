@@ -111,5 +111,14 @@ trait Solver2D  {
 
     true
     }
+  
+  
+  def setControlPoint(slice:Int,index:Int,value:Double):Boolean=
+    {
+      if (pk.length<=slice) false
+      else if(pk(slice).numberRows<=index) false
+      else pk(slice).set(index,0,value); true
+    }
+  
 
 }

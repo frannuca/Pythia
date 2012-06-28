@@ -27,4 +27,5 @@ public interface INurbsService {
     @WebMethod public Double Compute1D(@WebParam(name="session")String sessionId,@WebParam(name="x")Double x);
     @WebMethod public DVector Compute1DBatch(@WebParam(name="session")String sessionId,@WebParam(name="points")Double[] points);
     @WebMethod public int DropSession(@WebParam(name="session")String sessionID);
+    @WebMethod public DVector Compute2DMultithreaded(String sessionId, DPoint2D[] points);
 }

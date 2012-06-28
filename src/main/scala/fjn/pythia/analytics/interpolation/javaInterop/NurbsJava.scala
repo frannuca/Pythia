@@ -51,6 +51,13 @@ class NurbsInterpolator2D(x:Array[java.lang.Double],
       bspline.solve(Z);
 
 
+   def compute(X:Array[java.lang.Double],Y:Array[java.lang.Double]):Array[java.lang.Double]={
+
+      val xn = X.map (s =>  bspline.getNormalizedCoord(s,0))
+      val yn = Y.map(s => bspline.getNormalizedCoord(s,1))
+      val d = bspline(xn zip yn)
+      d.map(m => m(2,0).asInstanceOf[java.lang.Double]).toArray
+    }
 
   def compute(X:java.lang.Double,Y:java.lang.Double):java.lang.Double={
 
