@@ -77,7 +77,7 @@ class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
            found = true
 
 
-         if (x<mean)
+         if (x < mean)
            {
              dHigh = dMean
            }
@@ -118,7 +118,7 @@ class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
         else
           0 until vector.length
 
-       resVector.filter(c => c>=0 && c<sz)
+       resVector.filter(c => c >= 0 && c < sz)
 
 
       }
@@ -290,7 +290,7 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
       else
         0 until vector.length
     
-     resVector.filter(c => c>=0 && c<sz)
+     resVector.filter(c => c >= 0 && c < sz)
     
       
     }

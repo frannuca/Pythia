@@ -1,13 +1,13 @@
 import sbt._
 import Keys._
-import com.github.retronym.SbtOneJar
+//import com.github.retronym.SbtOneJar
 
 object BuildSettings {
 
 
   val buildOrganization = "fjn"
   val buildVersion      = "1.0.0"
-  val buildScalaVersion = "2.9.1"
+  val buildScalaVersion = "2.9.2"
 
   val buildSettings = Defaults.defaultSettings ++ Seq (
     organization := buildOrganization,
@@ -62,9 +62,9 @@ object Resolvers {
   val metro = Resolver.url("Metro Web Services",url("https://metro.dev.java.net/"))
 
 
-  resolvers += "retronym-releases" at "http://retronym.github.com/repo/releases"
+  //resolvers += "retronym-releases" at "http://retronym.github.com/repo/releases"
 
-  resolvers += "retronym-snapshots" at "http://retronym.github.com/repo/snapshots"
+  //resolvers += "retronym-snapshots" at "http://retronym.github.com/repo/snapshots"
 
   resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
 
@@ -74,7 +74,7 @@ object Resolvers {
 
   addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.0.0")
 
-  addSbtPlugin("com.github.retronym" % "sbt-onejar" % "0.7")
+  //addSbtPlugin("com.github.retronym" % "sbt-onejar" % "0.7")
 
 }
 
@@ -104,7 +104,7 @@ object Dependencies {
   val mtj = "com.googlecode.matrix-toolkits-java" % "mtj" % "0.9.14"
   val scalatest = "org.scalatest" % "scalatest_2.9.0" % "1.4.1" % "test"
 
-  val specs2 =  "org.specs2" %% "specs2" % "1.5" % "test"
+  val specs2 =  "org.specs2" % "specs2_2.9.2" % "1.11" % "test"
 
   val commonsMath = "org.apache.commons" % "commons-math" % "2.0"
 
@@ -201,7 +201,7 @@ object PythiaBuild extends Build {
   lazy val pythia = Project (
     "pythia",
     file ("."),
-    settings = buildSettings++ SbtOneJar.oneJarSettings ++ Seq (resolvers :=  mathResolvers ++ akkaResolver ++ scalalaResolver, libraryDependencies ++= commonDeps
+    settings = buildSettings++ Seq (resolvers :=  mathResolvers ++ akkaResolver ++ scalalaResolver, libraryDependencies ++= commonDeps
       ++ matrixDeps ++ apacheMath  ++akkaDeps ++ wwwWar ++ Seq(Scalala,JFreeCommon,JFreeChart,XmlGraphicsCommons,CommonsIo,CommonsLang,JodaTime))
 //      ++ WebPlugin.webSettings
 
