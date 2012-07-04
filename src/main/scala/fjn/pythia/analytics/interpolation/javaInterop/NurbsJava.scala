@@ -40,12 +40,12 @@ class NurbsInterpolator2D(x:Array[java.lang.Double],
       val bspline = new Nurbs2D(qk.toArray,Array(orderX.toInt,orderY.toInt),Seq(x.length,y.length))
   
       val Z =
-      (for (i <- 0 until x.length;
-          j<- 0 until y.length
+      (for ( j<- 0 until y.length;
+             i <- 0 until x.length
           )
         yield
       {
-         z(i)(j).doubleValue()
+         z(j)(i).doubleValue()
       }).toArray
 
       bspline.solve(Z);

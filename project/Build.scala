@@ -46,12 +46,11 @@ object Resolvers {
   val sunrepo    = "Sun Maven2 Repo" at "http://download.java.net/maven/2"
   val sunrepoGF  = "Sun GF Maven2 Repo" at "http://download.java.net/maven/glassfish"
   val oraclerepo = "Oracle Maven2 Repo" at "http://download.oracle.com/maven"
-  val googlematrixrepo = Resolver.url("mtj-google-repo",url("http://code.google.com/p/matrix-toolkits-java"))
   val apacheMathrepo = Resolver.url("apache-math-repo",url("http://commons.apache.org/math"))
   val akkarepo ="Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 
   val oracleResolvers = Seq (sunrepo, sunrepoGF, oraclerepo)
-  val mathResolvers = Seq(sunrepo,googlematrixrepo,apacheMathrepo,jna)
+  val mathResolvers = Seq(sunrepo,apacheMathrepo,jna)
   val akkaResolver = Seq(akkarepo)
   val rsl =  "Scala Tools Snapshots" at "http://scala-tools.org/repo-snapshots/"
   val rs2 =  "ScalaNLP Maven2" at "http://repo.scalanlp.org/repo"
@@ -95,7 +94,7 @@ object Dependencies {
   val grizzlyportunif = "com.sun.grizzly" % "grizzly-portunif"  % grizzlyVer
 
 
-  val surfaceplot = "net.ericaro" % "surfaceplotter" %"2.0.1"
+
   val sleepycat = "com.sleepycat" % "je" % "4.0.92"
 
   val apachenet   = "commons-net"   % "commons-net"   % "2.0"
@@ -132,8 +131,6 @@ object Dependencies {
   /**2D plotting library, used indirectly through Scalala */
   def XmlGraphicsCommons = "org.apache.xmlgraphics" % "xmlgraphics-commons" % "1.3.1"
 
-  /**open GL support*/
-  def JOGL = "net.java.dev.jogl" % "jogl-windows-i586" % "1.1.1-rc6"
 
   /**Utilities for File IO */
   def CommonsIo = "commons-io" % "commons-io" % "1.4"
@@ -149,7 +146,6 @@ object Dependencies {
  // val metroDep = "com.sun.xml.ws" % "webservices" % "2.1-b15"
 
 
-  def baseDirectories = "file://C:/code/libs/jogl-1.1.1-windows-i586/lib/"
 
 
   lazy val jnalib = "net.java.dev.jna" % "jna" % "3.2.2"  //def extraJars = descendents(baseDirectories, "*.jar")
@@ -193,7 +189,7 @@ object PythiaBuild extends Build {
 
   val akkaDeps = Seq(akka_actor,akka_remote,akka_stm)
 
-  val plotDeps = Seq(JOGL,surfaceplot)
+
 
 
   val jetty = "org.mortbay.jetty" % "jetty" % "7.0.0.pre5"
@@ -206,7 +202,7 @@ object PythiaBuild extends Build {
     "pythia",
     file ("."),
     settings = buildSettings++ SbtOneJar.oneJarSettings ++ Seq (resolvers :=  mathResolvers ++ akkaResolver ++ scalalaResolver, libraryDependencies ++= commonDeps
-      ++ matrixDeps ++ apacheMath ++plotDeps ++akkaDeps ++ wwwWar ++ Seq(Scalala,JFreeCommon,JFreeChart,XmlGraphicsCommons,CommonsIo,CommonsLang,JodaTime))
+      ++ matrixDeps ++ apacheMath  ++akkaDeps ++ wwwWar ++ Seq(Scalala,JFreeCommon,JFreeChart,XmlGraphicsCommons,CommonsIo,CommonsLang,JodaTime))
 //      ++ WebPlugin.webSettings
 
 
