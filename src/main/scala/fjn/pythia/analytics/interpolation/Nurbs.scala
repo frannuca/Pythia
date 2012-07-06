@@ -8,7 +8,7 @@ import akka.actor.Actor._
 
 import collection.mutable.ListBuffer
 import akka.dispatch.Future
-
+import fjn.pythia.scheduler.threadpool
 
 
 /**
@@ -23,9 +23,10 @@ class nurb2DWorker(container:Array[Matrix[Double]],f:(Double,Double)=>Matrix[Dou
      def receive = {
        case ((u: Double, v: Double,index:Int)) => {
           container(index) = f(u,v)
-         self.channel tryTell true
+         true
        }
         case "end" => self.stop()
+       case _ =>  false
       }
 
    }
@@ -161,55 +162,20 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
    */
   def  apply(uv:Seq[(Double,Double)]):Seq[Matrix[Double]] ={
 
-          val interpolatedVector = (for (i <- 0 until uv.length ) yield new Matrix[Double](3,1))
-               .toArray[Matrix[Double]]
-
-          def func = (u:Double,v:Double) =>this.apply(u,v)
-
-          implicit val timeout = Actor.Timeout(60000)
-          var workers = for (i <- 0 until 4) yield  actorOf(new nurb2DWorker(interpolatedVector,func)).start()
-
-          var nw = 0
-           
-
-
-          val futures = new ListBuffer[Future[Any]]()
-          for ( item <- (uv zip  (0 until uv.length)))
+          def func = (u:Double,v:Double) =>
           {
-              futures+=(workers(nw%workers.length) ? (item._1._1,item._1._2,item._2))
-              nw = (nw+1)
-            if(futures.length>4)
-            {
-              futures.foreach(fu =>
-                try{
-                    fu.get
-                    Unit
-                   }
-              catch{
-                case _ => Unit
-              }
-              )
-
-              futures.clear()
-            }
-            
+            this.apply(u,v)
           }
 
-              futures.foreach(fu =>
-                    try{
-                        fu.get
-                        Unit
-                       }
-                  catch{
-                    case _ => Unit
-                  }
-              )
-         workers.foreach( fu => fu ! "end")
-          while (workers.forall(a => a.isRunning))
-             Thread.sleep(200)
+          val futures =
+          for ( item <- uv)
+            yield
+         {
+            ()=>func(item._1,item._2)
 
-      interpolatedVector
-    }
+         }
+    new threadpool(futures,14,10000).run()
+  }
 
   def getNormalizedCoord(x:Double,nCoord:Int):Double=
    {

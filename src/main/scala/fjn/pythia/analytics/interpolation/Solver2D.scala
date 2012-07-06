@@ -1,6 +1,9 @@
 package fjn.pythia.analytics.interpolation
 
 import fjn.pythia.matrix.Matrix
+import akka.dispatch.Future
+import akka.actor.Actor.Timeout
+import fjn.pythia.scheduler.threadpool
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,25 +33,26 @@ trait Solver2D  {
             qXMatrix.set(i, j, vv)
           }
         }
-
-
-
         qXMatrix.invert()
+
+        val sampleSize=3 //(x,y,z)
 
 
 
         //Solving linear systems for y index (x,0),(x,1),....,(x,m-1) with x 0 .. n-1
         //var Rl: Seq[Matrix[Double]] =
-           for (l <- 0 until dim(1))//we have dim(1) dim(1) points in y-direction, which are slices now
+        val futuresOnSystemSolver:Seq[()=>Matrix[Double]] =
+          for (l <- 0 until dim(1))//we have dim(1) dim(1) points in y-direction, which are slices now
             yield{
 
              //Building linear system for the kth slice:
 
              //Basis function matrix:
 
-             val sampleSize=3 //(x,y,z)
              //sample vector(right side of the system):
-             var rightM = new Matrix[Double](dim(0),sampleSize)
+
+          val f:Function0[Matrix[Double]] = ()=> {
+                   var rightM = new Matrix[Double](dim(0),sampleSize)
                    for(i <- 0 until dim(0))
                    {
                      val auxPos = Seq(i,l)
@@ -66,10 +70,17 @@ trait Solver2D  {
 
              val auxVal = qXMatrix * rightM
              auxVal
-            }
 
+          }
+            f
+          }
+
+       new threadpool[Matrix[Double]](futuresOnSystemSolver,14,100000).run().toSeq
 
   }
+
+
+
   def solve(z:Array[Double]):Boolean={
 
 
@@ -92,22 +103,27 @@ trait Solver2D  {
 
 
 
-         pk=
+      val futuresOnSystemSolver:Seq[()=>Matrix[Double]]=
            for (k <- 0 until dim(0))//we have dim(1) dim(1) points in y-direction, which are slices now
             yield{
 
              val sampleSize=3 //(x,y,z)
              //sample vector(right side of the system):
-             var rightM = new Matrix[Double](dim(1),sampleSize)
-                   for(i <- 0 until dim(1))
-                   {
-                     for(j <- 0 until sampleSize)
-                       rightM.set(i,j,Rl(i)(k,j))
-                   }
+             ()=>
+             {
+               var rightM = new Matrix[Double](dim(1),sampleSize)
+                                  for(i <- 0 until dim(1))
+                                  {
+                                    for(j <- 0 until sampleSize)
+                                      rightM.set(i,j,Rl(i)(k,j))
+                                  }
 
-             qXMatrix * rightM
+                            qXMatrix * rightM
+             }
+
             }
 
+     pk = new threadpool[Matrix[Double]](futuresOnSystemSolver,14,100000).run()
 
     true
     }
