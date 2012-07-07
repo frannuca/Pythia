@@ -25,6 +25,8 @@ class NurbsInterpolator2D(x:Array[java.lang.Double],
               orderX:java.lang.Integer,orderY:java.lang.Integer) extends NurbsInterpolator{
 
 
+
+      println("Transfering input point into linear array of vectors");
       val qk =
       for(
           iy <- y;
@@ -36,7 +38,8 @@ class NurbsInterpolator2D(x:Array[java.lang.Double],
         m.set(1,0,iy)
         m
       }
-  
+
+      System.out.println("Initializing NURBS2D");
       val bspline = new Nurbs2D(qk.toArray,Array(orderX.toInt,orderY.toInt),Seq(x.length,y.length))
   
       val Z =
@@ -48,13 +51,15 @@ class NurbsInterpolator2D(x:Array[java.lang.Double],
          z(j)(i).doubleValue()
       }).toArray
 
+      println("Solving Lineal systems for 2D Nurbs ...")
       bspline.solve(Z);
+      println("Finished Solving Lineal systems for 2D Nurbs ...")
 
 
    def compute(X:Array[java.lang.Double],Y:Array[java.lang.Double]):Array[java.lang.Double]={
 
-      val xn = X.map (s =>  bspline.getNormalizedCoord(s,0))
-      val yn = Y.map(s => bspline.getNormalizedCoord(s,1))
+      val xn = X.toList.par.map (s =>  bspline.getNormalizedCoord(s,0)).toArray
+      val yn = Y.toList.par.map(s => bspline.getNormalizedCoord(s,1)).toArray
       val d = bspline(xn zip yn)
       d.map(m => m(2,0).asInstanceOf[java.lang.Double]).toArray
     }

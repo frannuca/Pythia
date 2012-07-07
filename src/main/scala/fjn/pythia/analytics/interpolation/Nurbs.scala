@@ -162,6 +162,7 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
    */
   def  apply(uv:Seq[(Double,Double)]):Seq[Matrix[Double]] ={
 
+    println("Starting Batch computation of points")
           def func = (u:Double,v:Double) =>
           {
             this.apply(u,v)
@@ -174,7 +175,7 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
             ()=>func(item._1,item._2)
 
          }
-    new threadpool(futures,14,10000).run()
+    new threadpool(futures,4,10000).run()
   }
 
   def getNormalizedCoord(x:Double,nCoord:Int):Double=

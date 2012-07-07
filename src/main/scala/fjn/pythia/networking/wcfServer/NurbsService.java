@@ -60,7 +60,9 @@ public class NurbsService implements INurbsService {
 
     @Override
     public String InitializeInterpolator2D(@WebParam(name = "x") DVector x, @WebParam(name = "y") DVector y, @WebParam(name = "z") DMatrix z, @WebParam(name = "orderX") Integer orderX, @WebParam(name = "orderY") Integer orderY) {
-        
+
+
+
         Double[][] zp = new Double[z.getNRows()][];
         for(int i=0;i<z.getNRows();++i)
         {
@@ -71,7 +73,9 @@ public class NurbsService implements INurbsService {
         
         NurbsInterpolator2D interpolator = new NurbsInterpolator2D(x.getValue().toArray(new Double[x.getValue().size()]),
                 y.getValue().toArray(new Double[y.getValue().size()]),zp,orderX,orderY );
-                return NurbsServiceSessions.AddSession(interpolator);
+        String id = NurbsServiceSessions.AddSession(interpolator);
+        System.out.println(String.format("Initializing Session Id {0}",id));
+        return id;
     }
 
     @Override
@@ -100,20 +104,24 @@ public class NurbsService implements INurbsService {
             if (NurbsServiceSessions.reg_.containsKey(sessionId)) {
     
                 try {
-                    
+                    System.out.println(String.format("Computing 2D batch point multithreaded"));
                     NurbsInterpolator2D instance = (NurbsInterpolator2D) NurbsServiceSessions.reg_.get(sessionId);
                     java.lang.Double xs[] = new java.lang.Double[points.length];
                     java.lang.Double ys[] = new java.lang.Double[points.length] ;
+                    System.out.println(String.format("Copying the points"));
                     for(int i =0;i<points.length;++i)
                     {
                         xs[i]=points[i].getX();
                         ys[i]=points[i].getY();
                     }
+                    System.out.println(String.format("Computing"));
                      Double[] computerVals = instance.compute(xs, ys);
+                    System.out.println(String.format("Returning"));
                     for(Double d:computerVals)
                     {
                         res.getValue().add(d);
                     }
+                    System.out.println(String.format("Done"));
                     return res;
                 } catch (Exception ex) {
                     return null;

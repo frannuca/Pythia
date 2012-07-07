@@ -2,6 +2,7 @@ package fjn.pythia.scheduler
 
 import akka.actor.Actor
 import akka.dispatch.Future
+import ch.qos.logback.classic.pattern.ClassOfCallerConverter
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +28,7 @@ class threadpool[T](fs:Seq[(()=>T)],batchSize:Int,timeoutValue:Int)(implicit m2:
   def run():Seq[T]=
   {
 
+    println("Starting multithreaded task. No Thrd = "+batchSize.toString)
     val workers= (for (i <- 0 until batchSize) yield { akka.actor.Actor.actorOf(new worker[T])}).toSeq
     workers.foreach(w=> w.start)
 
@@ -43,8 +45,10 @@ class threadpool[T](fs:Seq[(()=>T)],batchSize:Int,timeoutValue:Int)(implicit m2:
       case None => throw new Exception("invalid result in actor pool function")
     })
 
+    println("Finalizing worker threads")
     workers.foreach(w => w ! "end")
 
+    println("Mapping results to "+ m2.getClass().getName())
     ret.map(r => r.asInstanceOf[T])
   }
 

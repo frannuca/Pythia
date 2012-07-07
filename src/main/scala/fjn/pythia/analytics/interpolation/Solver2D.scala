@@ -75,7 +75,7 @@ trait Solver2D  {
             f
           }
 
-       new threadpool[Matrix[Double]](futuresOnSystemSolver,14,100000).run().toSeq
+       new threadpool[Matrix[Double]](futuresOnSystemSolver,4,100000).run().toSeq
 
   }
 
@@ -123,7 +123,7 @@ trait Solver2D  {
 
             }
 
-     pk = new threadpool[Matrix[Double]](futuresOnSystemSolver,14,100000).run()
+     pk = new threadpool[Matrix[Double]](futuresOnSystemSolver,4,100000).run()
 
     true
     }
