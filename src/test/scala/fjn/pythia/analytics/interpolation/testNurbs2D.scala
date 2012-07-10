@@ -59,7 +59,7 @@ class testNurbs2D extends Specification {
 
 
     val order =1
-    val bspline = new Nurbs2D(qk,Array(order,order),Seq(nSamplesX,nSamplesY))
+    val bspline = new Nurbs2DChord(qk,Array(order,order),Seq(nSamplesX,nSamplesY))
     bspline.solve(z);
 
       for(item <- qk)
