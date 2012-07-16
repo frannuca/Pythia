@@ -18,33 +18,36 @@ trait parameterVector {
   self: controlPoints =>
 
   //Extracting the positions of each axis:
-  protected val parameterKnotsAux =
-    (for (i <- 0 until self.dim.length) yield Seq[Double]()).toArray
+  protected lazy val parameterKnotsAux = {
+
+    val parameterKnotsAux_ = (for (i <- 0 until self.dim.length) yield Seq[Double]()).toArray
 
 
-  //Find the list of points per coordinate:
-  for ((sz, nCoord) <- self.dim zip (0 until self.dim.length)) {
-    for (i <- 0 until sz) {
+    //Find the list of points per coordinate:
+    for ((sz, nCoord) <- self.dim zip (0 until self.dim.length)) {
+      for (i <- 0 until sz) {
 
-      val m = (for (j <- 0 until self.dim.length) yield 0).toArray[Int]//generate a seq with dim 0's
-      m(nCoord) = i //alter the nCoord to the ith item, allowing to sweep on nCoord to extract the points on this axis
-      parameterKnotsAux(nCoord) = parameterKnotsAux(nCoord) ++ Seq(viewer(m)(nCoord, 0))
+        val m = (for (j <- 0 until self.dim.length) yield 0).toArray[Int] //generate a seq with dim 0's
+        m(nCoord) = i //alter the nCoord to the ith item, allowing to sweep on nCoord to extract the points on this axis
+        parameterKnotsAux_(nCoord) = parameterKnotsAux_(nCoord) ++ Seq(viewer(m)(nCoord, 0))
+      }
     }
+    parameterKnotsAux_
   }
- 
+
   //Calculating the final parameter knots associated to the sequence of points qk
   // with the Chord method
-  def parameterKnots:Array[Seq[Double]]
+  def parameterKnots: Array[Seq[Double]]
 
 
   /**
-   *the linear 'matrix'  of transformed points, which consists
+   * the linear 'matrix'  of transformed points, which consists
    * of the original points qk but placed into the transformed coordinates (u,v)
-    */
+   */
 
-  def tqk:Array[Matrix[Double]]
+  def tqk: Array[Matrix[Double]]
 
-  }
+}
 
 
 /**
@@ -55,40 +58,49 @@ trait parameterVectorCentripetal extends parameterVector {
   self: controlPoints =>
 
 
-  val parameterKnots = (for (i <- 0 until parameterKnotsAux.length) yield Seq[Double]()).toArray
+  lazy val parameterKnots = {
+    val parameterKnots_ = (for (i <- 0 until parameterKnotsAux.length) yield Seq[Double]()).toArray
 
- for (i <- 0 until parameterKnotsAux.length){
 
-   //Calculate the sum of the sqrt differences between samples per coordinate for the Centripetal
-         //distribution normalization
-         val sqrt_normLength =
-           (for (n <- 1 until parameterKnotsAux(i).length;
-                 val d = math.sqrt(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))
-           ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
+    for (i <- 0 until parameterKnotsAux.length) {
 
-  parameterKnots(i) = parameterKnots(i) ++ Seq(0.0)
+      //Calculate the sum of the sqrt differences between samples per coordinate for the Centripetal
+      //distribution normalization
+      val sqrt_normLength =
+        (for (n <- 1 until parameterKnotsAux(i).length;
+              val d = math.sqrt(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))
+        ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
 
-  for (n <- 1 until parameterKnotsAux(i).length - 1) {
+      parameterKnots_(i) = parameterKnots_(i) ++ Seq(0.0)
 
-    parameterKnots(i) =
-      parameterKnots(i) ++ Seq(parameterKnots(i)(n - 1) + math.sqrt(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))) / sqrt_normLength)
+      for (n <- 1 until parameterKnotsAux(i).length - 1) {
+
+        parameterKnots_(i) =
+          parameterKnots_(i) ++ Seq(parameterKnots_(i)(n - 1) + math.sqrt(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))) / sqrt_normLength)
+      }
+
+      parameterKnots_(i) =
+        parameterKnots_(i) ++ Seq(1.0d)
+
+
+    }
+    parameterKnots_
+
   }
 
-  parameterKnots(i) =
-    parameterKnots(i) ++ Seq(1.0d)
-
-
-
- }
-  val tqk =
-          (for (i <- 0 until qk.length) yield {
-            val q: Matrix[Double] = qk(i).clone()
-            val xy = viewer.fromIndex2Seq(i)
-            for ((n, v) <- (0 until xy.length) zip xy) {
-              q.set(n, 0, parameterKnots(n)(v))
-            }
-            q
-          }).toArray[Matrix[Double]]
+  lazy val tqk =
+    (for (i <- 0 until qk.length) yield {
+      val q: Matrix[Double] = qk(i).clone()
+      val xy = viewer.fromIndex2Seq(i)
+      for ((n, v) <- (0 until xy.length) zip xy) {
+        if(parameterKnots(n)(v) == Double.NaN)
+        {
+          val a  = 0
+        }
+        q.set(n, 0, parameterKnots(n)(v))
+      }
+      q
+    }).toArray[Matrix[Double]]
 
 }
 
@@ -97,42 +109,49 @@ trait parameterVectorChord extends parameterVector {
   self: controlPoints =>
 
 
- 
-
-  val parameterKnots = (for (i <- 0 until parameterKnotsAux.length) yield Seq[Double]()).toArray
-
-
-  for (i<- 0 until parameterKnotsAux.length){
-   //Calculate the sum of the differences between samples per coordinate for the Chord distribution
-      //normalization
-      val normLength =
-        (for (n <- 1 until parameterKnotsAux(i).length;
-              val d = parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)
-        ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
-  
-  parameterKnots(i) = parameterKnots(i) ++ Seq(0.0)
-
-  for (n <- 1 until parameterKnotsAux(i).length - 1) {
-
-    parameterKnots(i) =
-      parameterKnots(i) ++ Seq(parameterKnots(i)(n - 1) +(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))) / normLength)
-  }
-
-  parameterKnots(i) =
-    parameterKnots(i) ++ Seq(1.0d)
+  lazy val parameterKnots = {
+      val parameterKnots_ = (for (i <- 0 until parameterKnotsAux.length) yield Seq[Double]()).toArray
 
 
-  }
+      for (i <- 0 until parameterKnotsAux.length) {
 
-  val tqk =
-          (for (i <- 0 until qk.length) yield {
-            val q: Matrix[Double] = qk(i).clone()
-            val xy = viewer.fromIndex2Seq(i)
-            for ((n, v) <- (0 until xy.length) zip xy) {
-              q.set(n, 0, parameterKnots(n)(v))
-            }
-            q
-          }).toArray[Matrix[Double]]
+        //Calculate the sum of the sqrt differences between samples per coordinate for the Centripetal
+        //distribution normalization
+        val normLength =
+            (for (n <- 1 until parameterKnotsAux(i).length;
+                  val d = parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1)
+            ) yield d).toList.foldLeft(0.0)((acc, v) => acc + v)
+
+        parameterKnots_(i) = parameterKnots_(i) ++ Seq(0.0)
+
+        for (n <- 1 until parameterKnotsAux(i).length - 1) {
+
+          parameterKnots_(i) =
+            parameterKnots_(i) ++ Seq(parameterKnots_(i)(n - 1) +
+              math.sqrt(math.abs(parameterKnotsAux(i)(n) - parameterKnotsAux(i)(n - 1))) / normLength)
+        }
+
+        parameterKnots_(i) =
+          parameterKnots_(i) ++ Seq(1.0d)
+
+
+      }
+      parameterKnots_
+
+    }
+
+
+
+
+  lazy val tqk =
+    (for (i <- 0 until qk.length) yield {
+      val q: Matrix[Double] = qk(i).clone()
+      val xy = viewer.fromIndex2Seq(i)
+      for ((n, v) <- (0 until xy.length) zip xy) {
+        q.set(n, 0, parameterKnots(n)(v))
+      }
+      q
+    }).toArray[Matrix[Double]]
 
 }
 
@@ -140,33 +159,36 @@ trait parameterVectorEquallySpaced extends parameterVector {
   self: controlPoints =>
 
 
-  
+  lazy val parameterKnots = {
+    val parameterKnots_ = (for (i <- 0 until parameterKnotsAux.length) yield Seq[Double]()).toArray
 
-  val parameterKnots = (for (i <- 0 until parameterKnotsAux.length) yield Seq[Double]()).toArray
 
 
-  for (i <- 0 until parameterKnotsAux.length){
+   for (i <- 0 until parameterKnotsAux.length) {
 
-  parameterKnots(i) = parameterKnots(i) ++ Seq(0.0)
+     parameterKnots_(i) = parameterKnots_(i) ++ Seq(0.0)
 
-  for (n <- 1 until parameterKnotsAux(i).length - 1) {
+     for (n <- 1 until parameterKnotsAux(i).length - 1) {
 
-    parameterKnots(i) =
-      parameterKnots(i) ++ Seq(n.toDouble / (parameterKnotsAux(i).length - 1).toDouble)
+       parameterKnots_(i) =
+         parameterKnots_(i) ++ Seq(n.toDouble / (parameterKnotsAux(i).length - 1).toDouble)
+     }
+
+     parameterKnots_(i) =
+       parameterKnots_(i) ++ Seq(1.0d)
   }
 
-  parameterKnots(i) =
-    parameterKnots(i) ++ Seq(1.0d)
+    parameterKnots_
   }
 
-  val tqk =
-        (for (i <- 0 until qk.length) yield {
-          val q: Matrix[Double] = qk(i).clone()
-          val xy = viewer.fromIndex2Seq(i)
-          for ((n, v) <- (0 until xy.length) zip xy) {
-            q.set(n, 0, parameterKnots(n)(v))
-          }
-          q
-        }).toArray[Matrix[Double]]
+  lazy val tqk =
+    (for (i <- 0 until qk.length) yield {
+      val q: Matrix[Double] = qk(i).clone()
+      val xy = viewer.fromIndex2Seq(i)
+      for ((n, v) <- (0 until xy.length) zip xy) {
+        q.set(n, 0, parameterKnots(n)(v))
+      }
+      q
+    }).toArray[Matrix[Double]]
 
 }

@@ -25,7 +25,7 @@ trait controlPoints {
   def qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
 
   def dim:Seq[Int] /// list of dimension composing our grid
-  val viewer = new MultiArrayView[Matrix[Double]](qk,dim)   //accessor to the point in the given grid
+  def viewer = new MultiArrayView[Matrix[Double]](qk,dim)   //accessor to the point in the given grid
 
   def apply(w:Seq[Int]):Matrix[Double]=
   {

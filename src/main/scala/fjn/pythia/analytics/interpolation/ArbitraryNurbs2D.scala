@@ -11,32 +11,45 @@ import fjn.pythia.matrix.Matrix
 
 /**
  * Accepts a list of sclices oriented in v-direction with inhomogeneous u distribution
- * @param samples : list of slices
- */
-class ArbitraryNurbs2D(samples:Seq[Seq[Matrix[Double]]],basisOrder:Array[Int]) {
+ * @param samples : list of slices in the following order(x,y): samples(0) contains all x values at y=y0.
+ *                thus samples(j)(i) is the yi, xj points of the non-uniform grid.
+ *                each Matrix point in this seq of seq must be a 3D point with the following coordiante order:
+ *                p(0,0)=x, p(1,0)=y and p(2,0)=z
+ * */
+class ArbitraryNurbs2D(samples:Seq[Seq[Matrix[Double]]],val basisOrderv:Array[Int],implicit val tolerance:Double=1.0e-4)
+  extends Nurbs2DBase with parameterVectorCentripetal
+{
 
-  val uPoints =
+
+  lazy val basisOrder = basisOrderv
+
+
+  //list of u coordinate points
+  lazy val uPoints =
   (for (j<- 0 until samples.length;
        i<- 0 until samples(j).length)
     yield
   {
     (samples(j)(i)(0,0))
-  }).toSet[Double]
+  }).toList.sortWith((v1,v2) => v1 < v2).toSet[Double]
 
-  val vPoints =
-    (for (j<- 0 until samples.length;
-         i<- 0 until samples(j).length)
-      yield
-    {
-      (samples(j)(i)(1,0))
-    }).toSet[Double]
-
+  //list of v coordiante points
+  lazy val vPoints =
+   (for (j<- 0 until samples.length)
+     yield
+   {
+     val a = samples(j)(0)(1,0)
+     a
+   }).toList.sortWith((v1,v2) => v1 < v2).toSet[Double]
 
 
   lazy val homogeneousSlices=
-      (for (j<- 0 until samples.length)
+      (
+        for (j<- 0 until samples.length)
             yield
           {
+            val aa = uPoints
+            val bb=vPoints
             val zPoints =
                 (for (n<- 0 until samples(j).length)
                   yield
@@ -44,6 +57,7 @@ class ArbitraryNurbs2D(samples:Seq[Seq[Matrix[Double]]],basisOrder:Array[Int]) {
                   (samples(j)(n)(2,0))
                 }).toArray
 
+            val jVal = samples(j)(0)(1,0)
             //val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int]
             val nurb = new Nurbs1D(samples(j).toArray,Seq(basisOrder(0)).toArray,Seq(samples(j).length))
             nurb.solve(zPoints)
@@ -51,14 +65,34 @@ class ArbitraryNurbs2D(samples:Seq[Seq[Matrix[Double]]],basisOrder:Array[Int]) {
             (for(u <- uPoints)
               yield
             {
-              nurb(nurb.getNormalizedCoord(u))
+              //TODO: add matrix x,y,z
+              val rM = new Matrix[Double](3,1)
+              val auxm = nurb(nurb.getNormalizedCoord(u))
+              rM.set(0,0,auxm(0,0))
+              rM.set(1,0,jVal)
+              rM.set(2,0,auxm(1,0))
+
+              rM
+
             }).toArray
 
           }).toArray.flatMap(x=>x)
 
 
-  lazy val nurb2D = new Nurbs2D(homogeneousSlices,basisOrder,Seq(uPoints.size,vPoints.size))
+  lazy val qk:Array[Matrix[Double]]=homogeneousSlices.map(item => {
+    val m = new Matrix[Double](2,2)
+    m.set(0,0,item(0,0))
+    m.set(1,0,item(1,0))
+    m
+  })
+ lazy val z = homogeneousSlices.map(item => {
+     val a = item(2,0)
+     a
+   })
+  lazy val dim:Seq[Int]=Seq(uPoints.size,vPoints.size)
 
 
+
+  solve(z);
 
 }

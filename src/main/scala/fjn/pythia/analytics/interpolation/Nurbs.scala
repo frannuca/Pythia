@@ -11,6 +11,7 @@ import akka.dispatch.Future
 import fjn.pythia.scheduler.threadpool
 
 
+
 /**
  * Created by fjn
  * User: fran
@@ -31,13 +32,18 @@ class nurb2DWorker(container:Array[Matrix[Double]],f:(Double,Double)=>Matrix[Dou
 
    }
 
-class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int])
+class Nurbs1D(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:Seq[Int])
     extends controlPoints
     with parameterVectorCentripetal
     with BasisFunctionOrder
     with KnotsVector
     with Basis
     with Solver1D{
+
+  def qk = qkv
+  def basisOrder = basisOrderv
+  def dim=dimv
+
   def  apply(t:Double):Matrix[Double] ={
 
     var sum = new Matrix[Double](2, 1)
@@ -127,14 +133,14 @@ class Nurbs1D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
 
 trait Nurbs2DBase
   extends controlPoints
-      with parameterVector
       with BasisFunctionOrder
       with KnotsVector
       with Basis
       with Solver2D{
+  self: parameterVector =>
 
 
-  val tolerance:Double
+  def tolerance:Double
 
   def  apply(u:Double,v:Double):Matrix[Double] ={
 
@@ -220,7 +226,7 @@ trait Nurbs2DBase
             }
            counter =counter + 1
             if(counter>500)
-              found=true;
+              found=true
            }
 
 
@@ -230,7 +236,7 @@ trait Nurbs2DBase
 
   def getBasisRange(nCoord:Int)(t:Double):Seq[Int]={
       val vector = knotsVector(nCoord)
-      val sz = vector.length-basisOrder(nCoord)-1;
+      val sz = vector.length-basisOrder(nCoord)-1
 
       var i=0
       var found:Boolean=false
@@ -238,8 +244,8 @@ trait Nurbs2DBase
       while(!found && counter < sz){
           if (t<=vector(counter))
           {
-            i = counter;
-            found=true;
+            i = counter
+            found=true
           }
         counter = counter + 1
       }
@@ -258,10 +264,17 @@ trait Nurbs2DBase
 }
 
 
-class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int],implicit val tolerance:Double=1.0e-4)
-  extends controlPoints with parameterVectorEquallySpaced with Nurbs2DBase{
+class Nurbs2D(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
+  extends Nurbs2DBase  with parameterVectorEquallySpaced  {
+
+  def qk=qkv
+  def basisOrder = basisOrderv
+  def dim = dimv
+
+
   override def getNormalizedCoord(x:Double,nCoord:Int):Double=
      {
+
 
        def nurb:(Double => Double) = x=> {if (nCoord==0) this.apply(x,0)(nCoord,0) else this.apply(0,x)(nCoord,0)}
 
@@ -273,22 +286,30 @@ class Nurbs2D(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq
        var minVal = nurb(dLow)
 
        dMean = (x-minVal)/(maxVal-minVal)
-       return dMean;
+       dMean
 
      }
 }
 
 
-class Nurbs2DChord(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int],implicit val tolerance:Double=1.0e-4)
-  extends controlPoints with parameterVectorChord with Nurbs2DBase{
+class Nurbs2DChord(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
+  extends  parameterVectorChord with Nurbs2DBase{
+
+  def qk=qkv
+    def basisOrder = basisOrderv
+    def dim = dimv
 
   println("Nurbs2DChord")
 
 }
 
 
-class Nurbs2DCentripetal(val qk:Array[Matrix[Double]],val basisOrder:Array[Int],val dim:Seq[Int],implicit val tolerance:Double=1.0e-4)
+class Nurbs2DCentripetal(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
   extends controlPoints with parameterVectorCentripetal with Nurbs2DBase{
+  def qk=qkv
+    def basisOrder = basisOrderv
+    def dim = dimv
+
 
   println("Nurbs2DCentripetal")
 

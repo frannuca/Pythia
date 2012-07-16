@@ -8,15 +8,14 @@ import java.io.{BufferedReader, InputStreamReader}
 
 import akka.dispatch.Future
 
-
-
 /**
+ * Created by fjn army of one.
  * User: fran
- * Date: 5/7/12
- * Time: 11:15 PM
+ * Date: 7/11/12
+ * Time: 8:39 PM
  */
 
-class testNurbs2D extends Specification {
+class testArbitraryNurbs  extends Specification {
   "Creating a 2D surface to be interpolated" should {
 
     "Converge to given solution" in {
@@ -28,41 +27,39 @@ class testNurbs2D extends Specification {
 
   def `testAlgorithm` ={
 
-    val nSamplesX=5
-    val nSamplesY=15
-    val qk =
-      (for(
-           k<- 0 until nSamplesY;
-           h <- 0 until nSamplesX;
-        val mt = new Matrix[Double](2,1)
-      ) yield {
-        mt.zeros;
-        mt.set(0,0,3.0*h.toDouble/nSamplesX)
-        mt.set(1,0,3.0*k.toDouble/nSamplesY)
-        mt
-        }
-        ).toArray[Matrix[Double]]
-
-
-
     def psinc:Function2[Double,Double,Double] =
-      (u,v) => math.sin(math.sqrt(u*u+v*v+1e-4))/math.sqrt(u*u+v*v+1e-4)
+          (u,v) => math.sin(math.sqrt(u*u+v*v+1e-4))/math.sqrt(u*u+v*v+1e-4)
+    val nSamplesX=5
+    val nSamplesY=5
+    val qk =
+      (for(k<- 0 until nSamplesY )
+        yield
+      {
+        val y =3.0*k.toDouble/nSamplesY
+        (for (h <- 0 until nSamplesX)
+          yield
+        {
+          val mt = new Matrix[Double](3,1)
+          mt.zeros;
+          val x = 3.0*h.toDouble/nSamplesX
 
-    val z =(for(q <- qk)
-           yield
-            {
-              val x= q(0,0)
-              val y =q(1,0)
+                  mt.set(0,0,x)
+                  mt.set(1,0,y)
+                  mt.set(2,0,psinc(x,y))
+                  mt
+        }).toSeq
 
-              psinc(x,y)
-            }).toArray
+        }
+        ).toSeq
 
 
-    val order =1
-    val bspline = new Nurbs2DCentripetal(qk,Array(order,order),Seq(nSamplesX,nSamplesY))
-    bspline.solve(z);
 
-      for(item <- qk)
+    val order =2
+    val bspline = new ArbitraryNurbs2D(qk,Array(order,order))
+
+
+      for(items <- qk;
+          item <- items)
         {
           val u = bspline.getNormalizedCoord( item(0,0),0)
           val v = bspline.getNormalizedCoord( item(1,0),1)

@@ -57,7 +57,7 @@ trait KnotsVector {
     knots_
   }
 
-  val knotsVector = computeKnots(self.parameterKnots)
+  lazy val knotsVector = computeKnots(self.parameterKnots)
 }
 
 trait Basis {
