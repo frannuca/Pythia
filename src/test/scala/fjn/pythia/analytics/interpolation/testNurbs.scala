@@ -66,6 +66,8 @@ class testNurbs  extends Specification {
     val nSamples=z.length
 
         var qk = Seq[Matrix[Double]]()
+        var xAxis = Seq[Double]()
+
 
     for(i <- 0 until zsHomogeneous.length)
           {
@@ -74,6 +76,7 @@ class testNurbs  extends Specification {
               val aux = new Matrix[Double](1,1)
               aux.set(0,0,strikesHomogeneousAdjusted(i))
               qk = qk ++ Seq(aux)
+              xAxis = xAxis ++ Seq( strikesHomogeneousAdjusted(i))
             }
             else if (i== zsHomogeneous.length-1)
             {
@@ -86,8 +89,8 @@ class testNurbs  extends Specification {
           }
 
 
-    val order =0
-    val bspline = new Nurbs1D(qk.toArray,Array(order),Seq(qk.length))
+    val order =2
+    val bspline = new Nurbs1D(qk.toSeq,Seq(order))
     bspline.solve(z.toArray);
 
 

@@ -30,6 +30,8 @@ class testNurbs2D extends Specification {
 
     val nSamplesX=5
     val nSamplesY=15
+    var xAxis = Seq[Double]()
+    var yAxis = Seq[Double]()
     val qk =
       (for(
            k<- 0 until nSamplesY;
@@ -37,6 +39,8 @@ class testNurbs2D extends Specification {
         val mt = new Matrix[Double](2,1)
       ) yield {
         mt.zeros;
+        xAxis = xAxis ++ Seq(3.0*h.toDouble/nSamplesX)
+        yAxis =yAxis ++ Seq( 3.0*k.toDouble/nSamplesY)
         mt.set(0,0,3.0*h.toDouble/nSamplesX)
         mt.set(1,0,3.0*k.toDouble/nSamplesY)
         mt
@@ -59,9 +63,10 @@ class testNurbs2D extends Specification {
 
 
     val order =1
-    val bspline = new Nurbs2DCentripetal(qk,Array(order,order),Seq(nSamplesX,nSamplesY))
+    val bspline = new Nurbs2DCentripetal(xAxis.toList.distinct.sortWith((a,b)=> a < b),yAxis.toList.distinct.sortWith((a,b)=> a < b),Array(order,order),Seq(nSamplesX,nSamplesY))
     bspline.solve(z);
 
+    var sumError = 0.0d
       for(item <- qk)
         {
           val u = bspline.getNormalizedCoord( item(0,0),0)
@@ -71,6 +76,7 @@ class testNurbs2D extends Specification {
           val y = ax(1,0)
           val z = ax(2,0)
           val r = psinc(item(0,0),item(1,0))
+          sumError = sumError + math.abs(z-r)
           if(math.abs(z-r)>1e-4)
           {
             println("Error in the solved system larger than 1e-3"+"Expected "+r+" obtained "+z)
@@ -91,6 +97,7 @@ class testNurbs2D extends Specification {
 
         }
 
+    println("Total error ="+sumError)
     true
   }
 

@@ -414,8 +414,15 @@ class Matrix[T1](nRows: Int, nCols: Int, isRowMajor: Boolean = false, numberOfCo
   
   def invert():Unit={
       import MatrixConstants._
-      MatrixInterface.invert(data.asInstanceOf[Array[Double]],this.numberCols)
-  
-    }
+      //MatrixInterface.invert(data.asInstanceOf[Array[Double]],this.numberCols)
+    import Jama.{_}
+
+    val A:Jama.Matrix  = new Jama.Matrix(data.asInstanceOf[Array[Double]],this.numberCols);
+    val I = Jama.Matrix.identity(this.numberRows,this.numberCols);
+    val s = A.solve(I);
+    this.data = s.getColumnPackedCopy().asInstanceOf[Array[T1]]
+    //650321210
+  }
 }
+
 

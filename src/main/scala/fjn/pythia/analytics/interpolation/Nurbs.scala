@@ -32,7 +32,13 @@ class nurb2DWorker(container:Array[Matrix[Double]],f:(Double,Double)=>Matrix[Dou
 
    }
 
-class Nurbs1D(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:Seq[Int])
+/**
+ *
+ * @param qkv: Sequence of 2-component vector containing the samples to be interpolated. The input vector component
+ *           distribution is: [0,0]-coordinate = abscissa. [1,0]-coordinate = function value
+ *@param basisOrderv: Sequence of 1 value containing the order of the interpolation to be applied
+ */
+class Nurbs1D(val qkv:Seq[Matrix[Double]],val basisOrderv:Seq[Int])
     extends controlPoints
     with parameterVectorCentripetal
     with BasisFunctionOrder
@@ -42,7 +48,7 @@ class Nurbs1D(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:
 
   def qk = qkv
   def basisOrder = basisOrderv
-  def dim=dimv
+  def dim=Seq(qk.length)
 
   def  apply(t:Double):Matrix[Double] ={
 
@@ -140,6 +146,18 @@ trait Nurbs2DBase
   self: parameterVector =>
 
 
+  val xAxis:Seq[Double]
+  val yAxis:Seq[Double]
+
+  def qk= for (y <- yAxis;
+               x <- xAxis)
+      yield
+    {
+      val m = new Matrix[Double](2,1);
+      m.set(0,0,x)
+      m.set(1,0,y)
+      m
+    }
   def tolerance:Double
 
   def  apply(u:Double,v:Double):Matrix[Double] ={
@@ -264,10 +282,10 @@ trait Nurbs2DBase
 }
 
 
-class Nurbs2D(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
+class Nurbs2D(val xAxis:Seq[Double],val yAxis:Seq[Double],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
   extends Nurbs2DBase  with parameterVectorEquallySpaced  {
 
-  def qk=qkv
+
   def basisOrder = basisOrderv
   def dim = dimv
 
@@ -292,10 +310,10 @@ class Nurbs2D(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:
 }
 
 
-class Nurbs2DChord(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
+class Nurbs2DChord(val xAxis:Seq[Double],val yAxis:Seq[Double],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
   extends  parameterVectorChord with Nurbs2DBase{
 
-  def qk=qkv
+
     def basisOrder = basisOrderv
     def dim = dimv
 
@@ -304,9 +322,9 @@ class Nurbs2DChord(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val 
 }
 
 
-class Nurbs2DCentripetal(val qkv:Array[Matrix[Double]],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
+class Nurbs2DCentripetal(val xAxis:Seq[Double],val yAxis:Seq[Double],val basisOrderv:Array[Int],val dimv:Seq[Int],implicit val tolerance:Double=1.0e-4)
   extends controlPoints with parameterVectorCentripetal with Nurbs2DBase{
-  def qk=qkv
+
     def basisOrder = basisOrderv
     def dim = dimv
 

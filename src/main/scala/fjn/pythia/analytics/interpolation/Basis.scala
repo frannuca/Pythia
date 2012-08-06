@@ -18,7 +18,7 @@ import scala.Double
  */
 trait BasisFunctionOrder
 {
-  def basisOrder:Array[Int]
+  def basisOrder:Seq[Int]
 }
 
 /**

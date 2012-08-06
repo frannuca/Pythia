@@ -20,15 +20,19 @@ trait parameterVector {
   //Extracting the positions of each axis:
   protected lazy val parameterKnotsAux = {
 
+    //Generates a Seq[Seq[Double]] containing the sequence of point per coordinate. e.g:  parameterKnotsAux_[i] is the
+    //sequence of point at the ith coordinate
     val parameterKnotsAux_ = (for (i <- 0 until self.dim.length) yield Seq[Double]()).toArray
 
 
-    //Find the list of points per coordinate:
+    //Find the list of points per coordinate
     for ((sz, nCoord) <- self.dim zip (0 until self.dim.length)) {
       for (i <- 0 until sz) {
 
-        val m = (for (j <- 0 until self.dim.length) yield 0).toArray[Int] //generate a seq with dim 0's
-        m(nCoord) = i //alter the nCoord to the ith item, allowing to sweep on nCoord to extract the points on this axis
+        val m = (for (j <- 0 until self.dim.length) yield 0).toArray //generate a seq with dim items set to 0
+        m(nCoord) = i //alter the nCoord to the ith item, allowing to sweep on nCoord to extract the points on this axis.
+                      // we sweep on the nCoord from 0 to sz(number of samples in the current coordinate) and extract
+                      //the list of points from the viewer.
         parameterKnotsAux_(nCoord) = parameterKnotsAux_(nCoord) ++ Seq(viewer(m)(nCoord, 0))
       }
     }
@@ -52,7 +56,8 @@ trait parameterVector {
 
 /**
  * the parameter vector (used as grid for the basis functions
- * the Centripetal distribution is good to distribute point on non-uniform sample distribution
+ * the Centripetal distribution is ideal for non-uniform sample distribution
+ * where points tend to acumulate around some sampling areas
  */
 trait parameterVectorCentripetal extends parameterVector {
   self: controlPoints =>

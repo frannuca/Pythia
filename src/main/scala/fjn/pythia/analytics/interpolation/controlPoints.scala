@@ -22,10 +22,10 @@ trait controlPoints {
   ///the algorithm expects a list of number of samples per dimension
   ///The array of sample in dimension dk is extracted as follows:
   // item(i,j)=qk(j*dim_i+i)
-  def qk: Array[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
+  def qk: Seq[Matrix[Double]] //list of control points as a multi-dimensional grid arrangement
 
   def dim:Seq[Int] /// list of dimension composing our grid
-  def viewer = new MultiArrayView[Matrix[Double]](qk,dim)   //accessor to the point in the given grid
+  lazy val viewer = new MultiArrayView[Matrix[Double]](qk,dim)   //accessor to the point in the given grid
 
   def apply(w:Seq[Int]):Matrix[Double]=
   {
